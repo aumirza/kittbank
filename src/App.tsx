@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { Route, type RouteObject, Routes } from 'react-router';
+import { LoadingScreen } from './components/LoadingScreen';
 
 const LoginPage = lazy(() => import('./pages/Login'));
 
@@ -11,7 +12,7 @@ const routes: RouteObject[] = [{ path: '/', element: <OverviewPage /> }];
 
 function App() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingScreen />}>
       <Routes>
         {/* <Route element={<div>Layout</div>}>
         </Route> */}
