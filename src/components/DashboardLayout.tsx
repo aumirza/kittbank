@@ -1,19 +1,28 @@
 import { Outlet } from 'react-router';
 
-import { SidebarProvider } from '@/components/ui/sidebar';
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from './AppSidebar';
 import DashboardHeader from './DashboardHeader';
 
 export default function DashboardLayout() {
   return (
     <div className="bg-accent">
-      <SidebarProvider defaultOpen={true}>
+      <SidebarProvider
+        defaultOpen={true}
+        style={
+          {
+            '--sidebar-width': '19rem',
+          } as React.CSSProperties
+        }
+      >
         <AppSidebar />
 
-        <main className="@container relative flex flex-1 flex-col gap-5 p-8">
+        <SidebarInset className="@container bg-accent p-3">
           <DashboardHeader />
-          <Outlet />
-        </main>
+          <div className="p-5 px-0">
+            <Outlet />
+          </div>
+        </SidebarInset>
         {/* <Toaster /> */}
       </SidebarProvider>
     </div>
