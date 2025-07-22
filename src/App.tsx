@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { Route, type RouteObject, Routes } from 'react-router';
+import DashboardLayout from './components/DashboardLayout';
 import { LoadingScreen } from './components/LoadingScreen';
 
 const LoginPage = lazy(() => import('./pages/Login'));
@@ -14,14 +15,14 @@ function App() {
   return (
     <Suspense fallback={<LoadingScreen />}>
       <Routes>
-        {/* <Route element={<div>Layout</div>}>
-        </Route> */}
         {authRoutes.map((route) => (
           <Route element={route.element} key={route.path} path={route.path} />
         ))}
-        {routes.map((route) => (
-          <Route element={route.element} key={route.path} path={route.path} />
-        ))}
+        <Route element={<DashboardLayout />}>
+          {routes.map((route) => (
+            <Route element={route.element} key={route.path} path={route.path} />
+          ))}
+        </Route>
         {/* <Route path="*" element={<div>404 Not Found</div>} /> */}
       </Routes>
     </Suspense>
