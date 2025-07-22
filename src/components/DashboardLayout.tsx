@@ -9,11 +9,11 @@ export default function DashboardLayout() {
     <div className="bg-accent">
       <SidebarProvider
         defaultOpen={true}
-        style={
-          {
-            '--sidebar-width': '19rem',
-          } as React.CSSProperties
-        }
+        // style={
+        //   {
+        //     '--sidebar-width': '19rem',
+        //   } as React.CSSProperties
+        // }
       >
         <AppSidebar />
 
