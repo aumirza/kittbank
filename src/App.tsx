@@ -3,6 +3,8 @@ import { Route, type RouteObject, Routes } from 'react-router';
 import DashboardLayout from './components/DashboardLayout';
 import { LoadingScreen } from './components/LoadingScreen';
 
+const NotFoundPage = lazy(() => import('./pages/NotFound'));
+
 const LoginPage = lazy(() => import('./pages/Login'));
 
 const OverviewPage = lazy(() => import('./pages/Overview'));
@@ -23,7 +25,7 @@ function App() {
             <Route element={route.element} key={route.path} path={route.path} />
           ))}
         </Route>
-        {/* <Route path="*" element={<div>404 Not Found</div>} /> */}
+        <Route element={<NotFoundPage />} path="*" />
       </Routes>
     </Suspense>
   );
