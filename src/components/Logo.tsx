@@ -7,7 +7,7 @@ export function Logo() {
         className="my-2 w-12 rounded-full bg-center object-cover"
         src={kittBankLogo}
       />
-      <span className="font-semibold text-3xl">Kitt Bank</span>
+      <span className="font-medium text-2xl">Kitt Bank</span>
     </div>
   );
 }
