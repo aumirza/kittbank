@@ -4,7 +4,7 @@ export function Logo() {
     <div className="flex items-center justify-between gap-2">
       <img
         alt="logo"
-        className="my-2 w-14 rounded-full bg-center object-cover"
+        className="my-2 w-12 rounded-full bg-center object-cover"
         src={kittBankLogo}
       />
       <span className="font-semibold text-3xl">Kitt Bank</span>
