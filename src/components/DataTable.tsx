@@ -34,7 +34,7 @@ interface DataTableProps<TData, TValue> {
   }[];
   showToolbar?: boolean;
   showPagination?: boolean;
-  title: string;
+  title?: string;
 }
 
 export function DataTable<TData, TValue>({
@@ -72,15 +72,19 @@ export function DataTable<TData, TValue>({
   const pageCount = table.getPageCount();
   return (
     <div className="space-y-4">
+      {showToolbar && (
+        <Card>
+          <CardContent>
+            <DataTableToolbar table={table} />
+          </CardContent>
+        </Card>
+      )}
       <Card>
-        <CardContent>
-          {showToolbar && <DataTableToolbar table={table} />}
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader>
-          <CardTitle>{title}</CardTitle>
-        </CardHeader>
+        {title && (
+          <CardHeader>
+            <CardTitle>{title}</CardTitle>
+          </CardHeader>
+        )}
         <CardContent>
           <div className="overflow-hidden">
             <Table>
