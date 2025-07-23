@@ -1,21 +1,16 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
+import { PageLayout } from '@/components/PageLayout';
 import { TicketDetailView } from '@/components/tickets/TicketDetailView';
 import { TicketEmptyState } from '@/components/tickets/TicketEmptyState';
 import { TicketList } from '@/components/tickets/TicketList';
 import { TicketStatusFilter } from '@/components/tickets/TicketStatusFilter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { mockTicketMessages, mockTickets } from '@/data/tickets';
-import { usePage } from '@/hooks/usePage';
 import type { Ticket, TicketStatus } from '@/types/ticket';
 
 export default function Tickets() {
-  const { setPage } = usePage();
   const [selectedTicket, setSelectedTicket] = useState<Ticket | undefined>();
   const [statusFilter, setStatusFilter] = useState<TicketStatus>('open');
-
-  useEffect(() => {
-    setPage('Support Tickets', 'Manage and track your support requests');
-  }, [setPage]);
 
   // Calculate ticket counts for filters
   const ticketCounts = useMemo(() => {
@@ -35,7 +30,11 @@ export default function Tickets() {
   };
 
   return (
-    <div className="flex h-[81vh] gap-4">
+    <PageLayout
+      className="flex h-[81vh] gap-4"
+      description="Manage and track your support requests"
+      title="Support Tickets"
+    >
       {/* Left Panel - Ticket List */}
       <div className="flex w-1/3 min-w-[400px] flex-col">
         <Card className="flex h-full flex-col">
@@ -72,6 +71,6 @@ export default function Tickets() {
           <TicketEmptyState />
         )}
       </div>
-    </div>
+    </PageLayout>
   );
 }
