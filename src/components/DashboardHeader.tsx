@@ -8,6 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { usePage } from '@/hooks/usePage';
 
 const user = {
   name: 'Filippo Inzaghi',
@@ -16,13 +17,13 @@ const user = {
 };
 
 export default function DashboardHeader() {
+  const { title, description } = usePage();
+
   return (
     <header className="flex items-center justify-between rounded-xl bg-white px-6 py-4 shadow-sm">
       <div>
-        <h1 className="font-semibold text-gray-900 text-xl">Overview</h1>
-        <p className="mt-1 text-gray-500">
-          Stay on top of your finances, all in one place.
-        </p>
+        <h1 className="font-semibold text-gray-900 text-xl">{title}</h1>
+        {description && <p className="text-gray-500 text-sm">{description}</p>}
       </div>
       <div className="flex items-center gap-4">
         <Button aria-label="Search" size="icon" variant="outline">
