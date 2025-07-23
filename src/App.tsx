@@ -3,15 +3,17 @@ import { Route, type RouteObject, Routes } from 'react-router';
 import DashboardLayout from './components/DashboardLayout';
 import { LoadingScreen } from './components/LoadingScreen';
 
-const NotFoundPage = lazy(() => import('./pages/NotFound'));
-
 const LoginPage = lazy(() => import('./pages/Login'));
-
 const OverviewPage = lazy(() => import('./pages/Overview'));
+const TicketsPage = lazy(() => import('./pages/Tickets'));
+const NotFoundPage = lazy(() => import('./pages/NotFound'));
 
 const authRoutes: RouteObject[] = [{ path: '/login', element: <LoginPage /> }];
 
-const routes: RouteObject[] = [{ path: '/', element: <OverviewPage /> }];
+const routes: RouteObject[] = [
+  { path: '/', element: <OverviewPage /> },
+  { path: '/ticket', element: <TicketsPage /> },
+];
 
 function App() {
   return (
