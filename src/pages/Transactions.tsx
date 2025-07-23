@@ -136,18 +136,13 @@ export default function Transactions() {
       </div>
 
       {/* Transactions Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Transactions</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <DataTable
-            columns={transactionColumns}
-            data={transactionsData}
-            showPagination={true}
-          />
-        </CardContent>
-      </Card>
+      <DataTable
+        columns={transactionColumns}
+        data={transactionsData}
+        showPagination={true}
+        showToolbar={true}
+        title="Recent Transactions"
+      />
     </PageLayout>
   );
 }
