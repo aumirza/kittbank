@@ -3,11 +3,15 @@ import { MonthlySpendingTrend } from '@/components/overview/MonthlySpendingTrend
 import { RecentTransactions } from '@/components/overview/RecentTransactions';
 import { TicketsCard } from '@/components/overview/TicketsCard';
 import { TransactionsCard } from '@/components/overview/TransactionsCard';
+import { PageLayout } from '@/components/PageLayout';
 
 export default function Overview() {
   return (
-    <div className="space-y-6">
-      {/*  */}
+    <PageLayout
+      className="space-y-6"
+      description="Stay on top of your finances, all in one place."
+      title="Overview"
+    >
       <FinancialSnapshot />
 
       <div className="grid gap-6 md:grid-cols-4">
@@ -26,6 +30,6 @@ export default function Overview() {
           <RecentTransactions />
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }
