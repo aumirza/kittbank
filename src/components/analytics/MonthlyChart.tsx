@@ -72,13 +72,9 @@ export default function MonthlyChart() {
           <PieChart height={300} width={300}>
             <Pie
               activeIndex={0}
-              activeShape={({
-                outerRadius = 0,
-                ...props
-              }: {
-                outerRadius?: number;
-                props: Record<string, unknown>;
-              }) => <Sector {...props} outerRadius={(outerRadius || 0) + 10} />}
+              activeShape={({ outerRadius = 0, ...props }) => (
+                <Sector {...props} outerRadius={(outerRadius || 0) + 10} />
+              )}
               cx="50%"
               cy="50%"
               data={data}
