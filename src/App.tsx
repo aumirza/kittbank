@@ -8,6 +8,7 @@ const OverviewPage = lazy(() => import('./pages/Overview'));
 const TicketsPage = lazy(() => import('./pages/Tickets'));
 const NotFoundPage = lazy(() => import('./pages/NotFound'));
 const TransactionsPage = lazy(() => import('./pages/Transactions'));
+const UsersPage = lazy(() => import('./pages/Users'));
 
 const authRoutes: RouteObject[] = [{ path: '/login', element: <LoginPage /> }];
 
@@ -15,6 +16,7 @@ const routes: RouteObject[] = [
   { path: '/', element: <OverviewPage /> },
   { path: '/ticket', element: <TicketsPage /> },
   { path: '/transactions', element: <TransactionsPage /> },
+  { path: '/user', element: <UsersPage /> },
 ];
 
 function App() {
