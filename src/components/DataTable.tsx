@@ -22,6 +22,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { DataTablePagination } from './DataTablePagination';
+import { DataTableToolbar } from './DataTableToolbar';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -32,14 +34,16 @@ interface DataTableProps<TData, TValue> {
   }[];
   showToolbar?: boolean;
   showPagination?: boolean;
+  title: string;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  //   searchableColumns,
-  //   showToolbar,
+  // searchableColumns,
+  showToolbar = false,
   showPagination = true,
+  title,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -68,58 +72,69 @@ export function DataTable<TData, TValue>({
   const pageCount = table.getPageCount();
   return (
     <div className="space-y-4">
-      {/* {showToolbar && (
-        <DataTableToolbar table={table} searchableColumns={searchableColumns} />
-      )} */}
-      <div className="overflow-hidden">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow className="h-12 bg-accent" key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead
-                    className="px-5 first:rounded-l-lg last:rounded-r-lg"
-                    key={header.id}
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
+      <Card>
+        <CardContent>
+          {showToolbar && <DataTableToolbar table={table} />}
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>{title}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-hidden">
+            <Table>
+              <TableHeader>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <TableRow className="h-12 bg-accent" key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <TableHead
+                        className="px-5 first:rounded-l-lg last:rounded-r-lg"
+                        key={header.id}
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </TableHead>
+                    ))}
+                  </TableRow>
                 ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow className="h-12 py-2" key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell className="h-12 px-5 py-2" key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+              </TableHeader>
+              <TableBody>
+                {table.getRowModel().rows?.length ? (
+                  table.getRowModel().rows.map((row) => (
+                    <TableRow className="h-12 py-2" key={row.id}>
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell className="h-12 px-5 py-2" key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      className="h-24 text-center"
+                      colSpan={columns.length}
+                    >
+                      No results.
                     </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  className="h-24 text-center"
-                  colSpan={columns.length}
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      {showPagination && pageCount > 1 && <DataTablePagination table={table} />}
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+          {showPagination && pageCount > 1 && (
+            <DataTablePagination table={table} />
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
