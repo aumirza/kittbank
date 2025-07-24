@@ -1,12 +1,13 @@
-import { ChevronDown } from 'lucide-react';
-import { Cell, Legend, Pie, PieChart, Sector, Tooltip } from 'recharts';
+import { Cell, Pie, PieChart, Sector, Tooltip } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { type ChartConfig, ChartContainer } from '../ui/chart';
 
 export default function MonthlyChart() {
   const SORT_OPTIONS = ['Date', 'Amount'];
@@ -40,61 +41,93 @@ export default function MonthlyChart() {
     '#FFCD56',
   ];
 
+  const chartConfig: ChartConfig = {
+    USD: {
+      color: '#FF6384',
+      label: 'US Dollar',
+    },
+    EUR: {
+      color: '#36A2EB',
+      label: 'Euro',
+    },
+    GBP: {
+      color: '#FFCE56',
+      label: 'British Pound',
+    },
+    JPY: {
+      color: '#4BC0C0',
+      label: 'Japanese Yen',
+    },
+    CNY: {
+      color: '#9966FF',
+      label: 'Chinese Yuan',
+    },
+    SEK: {
+      color: '#FF9F40',
+      label: 'Swedish Krona',
+    },
+    ESP: {
+      color: '#FFCD56',
+      label: 'Spanish Pesetas',
+    },
+  };
+
   const totalValue = data.reduce((sum, item) => sum + item.value, 0);
   const dynamicOuterRadius = Math.min(100, totalValue * 5);
 
   return (
     <Card className="p-4">
       <CardHeader className="flex items-center justify-between">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex w-full items-center justify-between gap-4">
           <CardTitle>Monthly</CardTitle>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button
-                aria-label="Sort by"
-                className="flex items-center gap-2 rounded-lg border px-4 py-2 font-normal text-sm"
-                type="button"
-              >
-                Sort by
-                <ChevronDown aria-hidden="true" className="ml-1 h-4 w-4" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+          <Select>
+            <SelectTrigger className="w-32 rounded-full">
+              <SelectValue placeholder="Sort by" />
+            </SelectTrigger>
+            <SelectContent>
               {SORT_OPTIONS.map((option) => (
-                <DropdownMenuItem key={option}>{option}</DropdownMenuItem>
+                <SelectItem key={option} value={option}>
+                  {option}
+                </SelectItem>
               ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+            </SelectContent>
+          </Select>
         </div>
       </CardHeader>
       <CardContent className="flex gap-8">
         <div className="w-1/2">
-          <PieChart height={300} width={300}>
-            <Pie
-              activeIndex={0}
-              activeShape={({ outerRadius = 0, ...props }) => (
-                <Sector {...props} outerRadius={(outerRadius || 0) + 10} />
-              )}
-              cx="50%"
-              cy="50%"
-              data={data}
-              dataKey="value"
-              fill="#8884d8"
-              nameKey="name"
-              outerRadius={dynamicOuterRadius}
-              strokeWidth={5}
-            >
-              {data.map((entry, index) => (
-                <Cell fill={COLORS[index % COLORS.length]} key={entry.name} />
-              ))}
-            </Pie>
-            <Tooltip />
-            <Legend />
-          </PieChart>
+          <ChartContainer className="h-full w-full" config={chartConfig}>
+            <PieChart>
+              <Pie
+                activeIndex={0}
+                activeShape={({ outerRadius = 0, ...props }) => (
+                  <Sector {...props} outerRadius={(outerRadius || 0) + 10} />
+                )}
+                cx="50%"
+                cy="50%"
+                data={data}
+                dataKey="value"
+                label={({ name, percent }) =>
+                  `${name} (${(percent * 100).toFixed(0)}%)`
+                }
+                nameKey="name"
+                outerRadius={dynamicOuterRadius}
+              >
+                {data.map((entry, index) => (
+                  <Cell fill={COLORS[index % COLORS.length]} key={entry.name} />
+                ))}
+              </Pie>
+              <Tooltip />
+            </PieChart>
+          </ChartContainer>
         </div>
         <ul className="list-disc space-y-3 pl-3">
-          {CURRENCIES.map((currency) => (
-            <li key={currency.code}>
+          {CURRENCIES.map((currency, index) => (
+            <li className="flex items-center gap-2" key={currency.code}>
+              <span
+                className="h-3 w-3 rounded-full"
+                style={{ backgroundColor: COLORS[index % COLORS.length] }}
+              />
               {currency.name} ({currency.code})
             </li>
           ))}
