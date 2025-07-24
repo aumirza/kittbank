@@ -8,7 +8,7 @@ import type { SearchBoxFeatureProperties } from '@/lib/mapbox';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN ?? '';
 
-export function ATMLocatorMap({
+export default function ATMLocatorMap({
   marker,
   search,
 }: {

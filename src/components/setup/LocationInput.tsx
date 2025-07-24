@@ -1,5 +1,9 @@
 import { SearchIcon } from 'lucide-react';
-import MapBoxMap, { type MapRef } from 'react-map-gl/mapbox';
+import { lazy, Suspense } from 'react';
+
+const MapBoxMap = lazy(() => import('react-map-gl/mapbox'));
+
+import type { MapRef } from 'react-map-gl/mapbox';
 import { MapSearchInput } from '../MapSearchInput';
 import { Input } from '../ui/input';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -9,10 +13,11 @@ import atmMarker from '@/assets/images/atm-marker.png';
 import branchMarker from '@/assets/images/branch-marker.png';
 import { useReverseGeocode } from '@/hooks/useReverseGeocode';
 import type { SearchBoxFeatureProperties } from '@/lib/mapbox';
+import { Loader } from '../Loader';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN ?? '';
 
-export function LocationInput({
+function LocationInputInner({
   markerType,
   onChange,
 }: {
@@ -89,5 +94,22 @@ export function LocationInput({
         />
       </div>
     </div>
+  );
+}
+
+export function LocationInput(props: {
+  markerType: 'atm' | 'branch';
+  onChange: (search: SearchBoxFeatureProperties | null) => void;
+}) {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex h-full w-full items-center justify-center">
+          <Loader size="lg" />
+        </div>
+      }
+    >
+      <LocationInputInner {...props} />
+    </Suspense>
   );
 }

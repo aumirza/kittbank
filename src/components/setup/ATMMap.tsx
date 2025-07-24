@@ -5,14 +5,17 @@ import {
   StickyNoteIcon,
   UploadIcon,
 } from 'lucide-react';
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import type { SearchBoxFeatureProperties } from '@/lib/mapbox';
+import { Loader } from '../Loader';
 import { MapSearchInput } from '../MapSearchInput';
 import { Card, CardContent } from '../ui/card';
 import { AddATMDialog } from './AddATMDialog';
-import { ATMLocatorMap } from './ATMLocatorMap';
+
+const ATMLocatorMap = lazy(() => import('./ATMLocatorMap'));
+
 import { ATMMapLegend } from './ATMMapLegend';
 import { ListMapSwitcher } from './ListMapSwitcher';
 
@@ -77,13 +80,21 @@ export function ATMMap() {
       </Card>
       <div className="relative h-[29rem] w-full flex-1 rounded-md border bg-gray-200 shadow-lg">
         {/* Controlled Legend Card */}
-        <div className="absolute top-4 left-4 z-10">
-          <ATMMapLegend onChange={setLegendValue} value={legendValue} />
-        </div>
-        <ATMLocatorMap marker={legendValue} search={searchValue} />
-        <div className="absolute top-4 right-4">
-          <ListMapSwitcher />
-        </div>
+        <Suspense
+          fallback={
+            <div className="flex h-full w-full items-center justify-center">
+              <Loader size="lg" />
+            </div>
+          }
+        >
+          <div className="absolute top-4 left-4 z-10">
+            <ATMMapLegend onChange={setLegendValue} value={legendValue} />
+          </div>
+          <ATMLocatorMap marker={legendValue} search={searchValue} />
+          <div className="absolute top-4 right-4">
+            <ListMapSwitcher />
+          </div>
+        </Suspense>
       </div>
     </div>
   );
