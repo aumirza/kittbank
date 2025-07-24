@@ -1,6 +1,7 @@
 import { Lock, Settings, User } from 'lucide-react';
 import { useState } from 'react';
 import { AccountForm } from '@/components/account/AccountForm';
+import { PageLayout } from '@/components/PageLayout';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -15,9 +16,12 @@ export default function AccountPage() {
   const [tabValue, setTabValue] = useState('account');
 
   return (
-    <div className="flex min-h-screen bg-muted">
+    <PageLayout
+      className="flex h-full flex-1 @md:flex-row flex-col"
+      title="Account"
+    >
       {/* Sidebar */}
-      <aside className="m-3 flex w-[270px] flex-col items-center rounded-2xl bg-background p-6 shadow-md">
+      <aside className="@md:1/3 m-3 flex h-full flex-col items-center rounded-2xl bg-background p-6 shadow-md lg:w-1/4">
         <div className="mb-8 flex w-full items-center gap-3">
           <Avatar className="h-12 w-12">
             <AvatarImage />
@@ -52,7 +56,7 @@ export default function AccountPage() {
       </aside>
 
       {/* Main Content */}
-      <main className="m-3 flex-1 rounded-2xl bg-background p-8 shadow-md">
+      <main className="m-3 h-full flex-1 rounded-2xl bg-background p-8 shadow-md">
         <Tabs className="w-full" onValueChange={setTabValue} value={tabValue}>
           <TabsContent className="p-0" value="account">
             <AccountForm />
@@ -80,6 +84,6 @@ export default function AccountPage() {
           </TabsContent>
         </Tabs>
       </main>
-    </div>
+    </PageLayout>
   );
 }
