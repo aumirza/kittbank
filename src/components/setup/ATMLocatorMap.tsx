@@ -1,6 +1,7 @@
 import MapBoxMap, { Marker } from 'react-map-gl/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { MapPin } from 'lucide-react';
+import atmMarker from '@/assets/images/atm-marker.png';
+import branchMarker from '@/assets/images/branch-marker.png';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN ?? '';
 
@@ -33,7 +34,7 @@ export function ATMLocatorMap({
             latitude={pos.lat}
             longitude={pos.lng}
           >
-            <MapPin className="text-blue-500" size={32} />
+            <img alt="ATM Marker" className="size-12" src={atmMarker} />
             <title>ATM location</title>
           </Marker>
         ))}
@@ -50,7 +51,7 @@ export function ATMLocatorMap({
             latitude={pos.lat}
             longitude={pos.lng}
           >
-            <MapPin className="text-green-500" size={32} />
+            <img alt="Branch Marker" className="size-12" src={branchMarker} />
             <title>Branch location</title>
           </Marker>
         ))}
