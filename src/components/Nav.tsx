@@ -6,28 +6,35 @@ import {
   Settings,
   User,
 } from 'lucide-react';
+import { forwardRef } from 'react';
 import { NavLink } from 'react-router';
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-
 import { cn } from '@/lib/utils';
 
-interface NavSidebarMenuButtonProps {
+interface NavSidebarMenuButtonProps
+  extends React.ComponentProps<typeof SidebarMenuButton> {
   isActive: boolean;
   icon: React.ElementType;
   title: string;
+  asChild?: boolean;
 }
 
-export function NavSidebarMenuButton({
-  isActive,
-  icon: Icon,
-  title,
-}: NavSidebarMenuButtonProps) {
+export const NavSidebarMenuButton = forwardRef<
+  HTMLButtonElement,
+  NavSidebarMenuButtonProps
+>(({ isActive, icon: Icon, title, asChild = false, ...props }, ref) => {
   return (
-    <SidebarMenuButton className="hover:bg-transparent" size="lg">
+    <SidebarMenuButton
+      asChild={asChild}
+      className="hover:bg-transparent"
+      ref={ref}
+      size="lg"
+      {...props}
+    >
       {isActive && (
         <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-20" />
       )}
@@ -49,7 +56,8 @@ export function NavSidebarMenuButton({
       </span>
     </SidebarMenuButton>
   );
-}
+});
+NavSidebarMenuButton.displayName = 'NavSidebarMenuButton';
 
 const navigationItems = [
   {

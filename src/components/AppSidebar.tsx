@@ -4,7 +4,7 @@ import {
   SettingsIcon,
   User2Icon,
 } from 'lucide-react';
-import { NavLink } from 'react-router';
+import { NavLink, useNavigate } from 'react-router';
 import {
   Sidebar,
   SidebarContent,
@@ -16,10 +16,12 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
+import { ConfirmDialog } from './ConfirmDialog';
 import { Logo } from './Logo';
 import { Nav, NavSidebarMenuButton } from './Nav';
 
 export function AppSidebar() {
+  const navigate = useNavigate();
   const { state, toggleSidebar } = useSidebar();
   const isCollapsed = state === 'collapsed';
 
@@ -70,11 +72,16 @@ export function AppSidebar() {
             />
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <NavSidebarMenuButton
-              icon={LogOut}
-              isActive={false}
-              title="Logout"
-            />
+            <ConfirmDialog
+              onConfirm={() => navigate('/login')}
+              title="Are you sure you want to logout?"
+            >
+              <NavSidebarMenuButton
+                icon={LogOut}
+                isActive={false}
+                title="Logout"
+              />
+            </ConfirmDialog>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
