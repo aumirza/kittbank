@@ -1,6 +1,6 @@
 import { ATMTab } from '@/components/setup/ATMTab';
+import { CurrencyTab } from '@/components/setup/CurrencyTab';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-
 export default function Setup() {
   return (
     <Tabs className="w-full" defaultValue="atm">
@@ -13,16 +13,16 @@ export default function Setup() {
         </TabsTrigger>
         <TabsTrigger
           className="h-10 rounded-full px-3 py-2 font-medium text-gray-700 text-sm hover:bg-gray-100 data-[state=active]:border data-[state=active]:border-primary data-[state=active]:bg-amber-100"
-          value="other"
+          value="currency"
         >
-          Other
+          Currency
         </TabsTrigger>
       </TabsList>
       <TabsContent className="" value="atm">
         <ATMTab />
       </TabsContent>
-      <TabsContent className="p-4" value="other">
-        <div>Other content goes here</div>
+      <TabsContent className="p-4" value="currency">
+        <CurrencyTab />
       </TabsContent>
     </Tabs>
   );
