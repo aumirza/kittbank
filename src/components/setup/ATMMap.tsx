@@ -5,15 +5,21 @@ import {
   StickyNoteIcon,
   UploadIcon,
 } from 'lucide-react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '../ui/card';
 import { AddATMDialog } from './AddATMDialog';
+import { ATMLocatorMap } from './ATMLocatorMap';
+import { ATMMapLegend } from './ATMMapLegend';
 import { ListMapSwitcher } from './ListMapSwitcher';
 
 export function ATMMap() {
+  const [legendValue, setLegendValue] = useState<'all' | 'atm' | 'branch'>(
+    'all'
+  );
   return (
-    <div className="space-y-5">
+    <div className="h-full min-h-0 space-y-5">
       <Card>
         <CardContent>
           <div className="flex items-center gap-2 ">
@@ -25,7 +31,6 @@ export function ATMMap() {
                 placeholder="Search"
               />
             </div>
-
             <div className="grid flex-1 grid-cols-4 gap-2">
               {/* Export Button */}
               <Button className="h-12 rounded-full" size="sm" variant="outline">
@@ -57,17 +62,16 @@ export function ATMMap() {
           </div>
         </CardContent>
       </Card>
-      <Card>
-        <CardContent>
-          {/* Map Component Placeholder */}
-          <div className="relative flex h-[27rem] items-center justify-center bg-gray-200">
-            <p className="text-gray-500">Map will be displayed here</p>
-            <div className="absolute top-4 right-4">
-              <ListMapSwitcher />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="relative h-[29rem] w-full flex-1 rounded-md border bg-gray-200 shadow-lg">
+        {/* Controlled Legend Card */}
+        <div className="absolute top-4 left-4 z-10">
+          <ATMMapLegend onChange={setLegendValue} value={legendValue} />
+        </div>
+        <ATMLocatorMap marker={legendValue} />
+        <div className="absolute top-4 right-4">
+          <ListMapSwitcher />
+        </div>
+      </div>
     </div>
   );
 }
