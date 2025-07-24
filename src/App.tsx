@@ -11,6 +11,7 @@ const TransactionsPage = lazy(() => import('./pages/Transactions'));
 const UsersPage = lazy(() => import('./pages/Users'));
 const AnalyticsPage = lazy(() => import('./pages/Analytics'));
 const SetupPage = lazy(() => import('./pages/Setup'));
+const AccountPage = lazy(() => import('./pages/Account'));
 
 const authRoutes: RouteObject[] = [{ path: '/login', element: <LoginPage /> }];
 
@@ -21,6 +22,7 @@ const routes: RouteObject[] = [
   { path: '/user', element: <UsersPage /> },
   { path: '/analytics', element: <AnalyticsPage /> },
   { path: '/setup', element: <SetupPage /> },
+  { path: '/account', element: <AccountPage /> },
 ];
 
 function App() {
