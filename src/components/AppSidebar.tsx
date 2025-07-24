@@ -4,6 +4,7 @@ import {
   SettingsIcon,
   User2Icon,
 } from 'lucide-react';
+import { NavLink } from 'react-router';
 import {
   Sidebar,
   SidebarContent,
@@ -51,11 +52,15 @@ export function AppSidebar() {
       <SidebarFooter className="border-border/40 border-t p-4">
         <SidebarMenu>
           <SidebarMenuItem>
-            <NavSidebarMenuButton
-              icon={User2Icon}
-              isActive={false}
-              title="Account"
-            />
+            <NavLink className="flex w-full" end to="/account">
+              {({ isActive }) => (
+                <NavSidebarMenuButton
+                  icon={User2Icon}
+                  isActive={isActive}
+                  title="Account"
+                />
+              )}
+            </NavLink>
           </SidebarMenuItem>
           <SidebarMenuItem>
             <NavSidebarMenuButton
