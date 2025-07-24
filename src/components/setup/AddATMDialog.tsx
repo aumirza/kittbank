@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -20,6 +21,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { LocationInput } from './LocationInput';
 
 const atmSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -128,7 +130,16 @@ export function AddATMDialog({ children }: { children: React.ReactNode }) {
                     Location <span className="text-red-500">*</span>
                   </FormLabel>
                   <FormControl>
-                    <div className="mt-3 h-96 space-y-2 bg-accent" />
+                    <div className="relative h-96">
+                      <LocationInput
+                        markerType="atm"
+                        onChange={(search) => {
+                          if (search) {
+                            form.setValue('location', search.name);
+                          }
+                        }}
+                      />
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
