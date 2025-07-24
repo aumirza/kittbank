@@ -13,7 +13,7 @@ export function ATMLocatorMap({
   search,
 }: {
   marker: 'all' | 'atm' | 'branch';
-  search: SearchBoxFeatureProperties | null;
+  search?: SearchBoxFeatureProperties | null;
 }) {
   const mapRef = useRef<MapRef | null>(null);
 
