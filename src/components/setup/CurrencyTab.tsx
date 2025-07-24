@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { DataTable } from '../DataTable';
+import { AddCurrencyDialog } from './AddCurrencyDialog';
 
 export function CurrencyTab() {
   const [search, setSearch] = useState('');
@@ -157,10 +158,12 @@ export function CurrencyTab() {
               <UploadIcon aria-hidden="true" className="mr-2 h-4 w-4" />
               Bulk Upload
             </Button>
-            <Button className="h-12 rounded-full" size="sm" variant="outline">
-              <PlusIcon aria-hidden="true" className="mr-2 h-4 w-4" />
-              Add
-            </Button>
+            <AddCurrencyDialog>
+              <Button className="h-12 rounded-full" size="sm" variant="outline">
+                <PlusIcon aria-hidden="true" className="mr-2 h-4 w-4" />
+                Add
+              </Button>
+            </AddCurrencyDialog>
           </div>
         </div>
         <DataTable
