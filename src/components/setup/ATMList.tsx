@@ -9,6 +9,7 @@ import { DataTable } from '@/components/DataTable';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
+import { AddATMDialog } from './AddATMDialog';
 import { ListMapSwitcher } from './ListMapSwitcher';
 
 export function ATMList() {
@@ -76,10 +77,12 @@ export function ATMList() {
               Bulk Upload
             </Button>
             {/* Add Button */}
-            <Button className="h-12 rounded-full" size="sm" variant="outline">
-              <PlusIcon className="mr-2 h-4 w-4" />
-              Add
-            </Button>
+            <AddATMDialog>
+              <Button className="h-12 rounded-full" size="sm" variant="outline">
+                <PlusIcon className="mr-2 h-4 w-4" />
+                Add
+              </Button>
+            </AddATMDialog>
           </div>
         </div>
         <DataTable

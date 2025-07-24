@@ -8,6 +8,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '../ui/card';
+import { AddATMDialog } from './AddATMDialog';
 import { ListMapSwitcher } from './ListMapSwitcher';
 
 export function ATMMap() {
@@ -42,10 +43,16 @@ export function ATMMap() {
                 Bulk Upload
               </Button>
               {/* Add Button */}
-              <Button className="h-12 rounded-full" size="sm" variant="outline">
-                <PlusIcon className="mr-2 h-4 w-4" />
-                Add
-              </Button>
+              <AddATMDialog>
+                <Button
+                  className="h-12 rounded-full"
+                  size="sm"
+                  variant="outline"
+                >
+                  <PlusIcon className="mr-2 h-4 w-4" />
+                  Add
+                </Button>
+              </AddATMDialog>
             </div>
           </div>
         </CardContent>
