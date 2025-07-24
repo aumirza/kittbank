@@ -1,14 +1,9 @@
 import { Lock, Settings, User } from 'lucide-react';
 import { useState } from 'react';
-import { AccountForm } from '../components/AccountForm';
-import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
-import { Separator } from '../components/ui/separator';
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '../components/ui/tabs';
+import { AccountForm } from '@/components/account/AccountForm';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const tabs = [
   { label: 'Account', value: 'account', icon: User },
