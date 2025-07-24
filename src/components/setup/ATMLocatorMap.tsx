@@ -1,24 +1,44 @@
-import MapBoxMap, { Marker } from 'react-map-gl/mapbox';
+import MapBoxMap, { type MapRef, Marker } from 'react-map-gl/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
+
+import { useEffect, useRef } from 'react';
 import atmMarker from '@/assets/images/atm-marker.png';
 import branchMarker from '@/assets/images/branch-marker.png';
+import type { SearchBoxFeatureProperties } from '@/lib/mapbox';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN ?? '';
 
 export function ATMLocatorMap({
   marker,
+  search,
 }: {
   marker: 'all' | 'atm' | 'branch';
+  search: SearchBoxFeatureProperties | null;
 }) {
+  const mapRef = useRef<MapRef | null>(null);
+
+  useEffect(() => {
+    if (mapRef.current && search) {
+      const map = mapRef.current.getMap();
+      map.flyTo({
+        center: [search.coordinates.longitude, search.coordinates.latitude],
+        zoom: 14,
+        essential: true, // This ensures the animation is not interrupted
+      });
+    }
+  }, [search]);
+
   return (
     <MapBoxMap
       initialViewState={{
-        latitude: 19.076,
-        longitude: 72.8777,
+        // Default view state, can be adjusted based on your needs
+        latitude: search?.coordinates?.latitude || 19.076,
+        longitude: search?.coordinates?.longitude || 72.8777,
         zoom: 14,
       }}
       mapboxAccessToken={MAPBOX_TOKEN}
       mapStyle="mapbox://styles/mapbox/streets-v11"
+      ref={mapRef}
       style={{ width: '100%', height: '100%' }}
     >
       {/* Fake ATM markers */}

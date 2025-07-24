@@ -8,6 +8,8 @@ import {
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import type { SearchBoxFeatureProperties } from '@/lib/mapbox';
+import { MapSearchInput } from '../MapSearchInput';
 import { Card, CardContent } from '../ui/card';
 import { AddATMDialog } from './AddATMDialog';
 import { ATMLocatorMap } from './ATMLocatorMap';
@@ -18,19 +20,30 @@ export function ATMMap() {
   const [legendValue, setLegendValue] = useState<'all' | 'atm' | 'branch'>(
     'all'
   );
+  const [searchValue, setSearchValue] =
+    useState<SearchBoxFeatureProperties | null>(null);
+
   return (
     <div className="h-full min-h-0 space-y-5">
       <Card>
         <CardContent>
           <div className="flex items-center gap-2 ">
             {/* Search Input */}
-            <div className="relative flex-1">
-              <Search className="-translate-y-1/2 absolute top-1/2 left-5 h-4 w-4 text-muted-foreground" />
-              <Input
-                className="max-full h-12 rounded-full pl-10"
-                placeholder="Search"
-              />
-            </div>
+
+            <MapSearchInput
+              onChange={setSearchValue}
+              render={(inputProps) => (
+                <div className="relative flex-1">
+                  <Search className="-translate-y-1/2 absolute top-1/2 left-5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    className="max-full h-12 rounded-full pl-10"
+                    placeholder="Search"
+                    {...inputProps}
+                  />
+                </div>
+              )}
+            />
+
             <div className="grid flex-1 grid-cols-4 gap-2">
               {/* Export Button */}
               <Button className="h-12 rounded-full" size="sm" variant="outline">
@@ -67,7 +80,7 @@ export function ATMMap() {
         <div className="absolute top-4 left-4 z-10">
           <ATMMapLegend onChange={setLegendValue} value={legendValue} />
         </div>
-        <ATMLocatorMap marker={legendValue} />
+        <ATMLocatorMap marker={legendValue} search={searchValue} />
         <div className="absolute top-4 right-4">
           <ListMapSwitcher />
         </div>
