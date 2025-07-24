@@ -20,10 +20,10 @@ export default function Setup() {
             Currency
           </TabsTrigger>
         </TabsList>
-        <TabsContent className="" value="atm">
+        <TabsContent value="atm">
           <ATMTab />
         </TabsContent>
-        <TabsContent className="p-4" value="currency">
+        <TabsContent value="currency">
           <CurrencyTab />
         </TabsContent>
       </Tabs>
