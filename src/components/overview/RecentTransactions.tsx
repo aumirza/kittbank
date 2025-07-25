@@ -45,7 +45,7 @@ export function RecentTransactions() {
             recentTransactions.map((transaction, idx) => (
               <div
                 className={`grid grid-cols-5 items-center gap-4 bg-white px-6 py-3 ${idx !== recentTransactions.length - 1 ? ' border-b' : ''}`}
-                key={transaction.id}
+                key={transaction.date}
               >
                 <span className="text-gray-700">{transaction.date}</span>
                 <span className="font-medium text-gray-900">
@@ -61,7 +61,7 @@ export function RecentTransactions() {
                     ? `$${Math.abs(transaction.amount).toLocaleString()}`
                     : `($${Math.abs(transaction.amount).toLocaleString()})`} */}
                 </span>
-                <span className="text-center">{transaction.type}</span>
+                <span className="text-center">-</span>
               </div>
             ))}
         </div>
