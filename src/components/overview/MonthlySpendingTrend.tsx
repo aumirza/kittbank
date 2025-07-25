@@ -1,5 +1,4 @@
-import { ChevronDown } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Area,
   AreaChart,
@@ -8,40 +7,16 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { Button } from '../ui/button';
+import { useGetMonthlySpendingTrendQuery } from '@/api/queries';
 import { Card } from '../ui/card';
 import { type ChartConfig, ChartContainer } from '../ui/chart';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '../ui/dropdown-menu';
-
-const YEARS = [2024, 2025];
-const MONTHS = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
-];
-
-// Example data for each year
-const SPENDING_DATA: Record<number, number[]> = {
-  2024: [700, 650, 750, 900, 1000, 950, 900, 950, 900, 750, 800, 850],
-  2025: [800, 700, 800, 950, 1050, 1000, 950, 1000, 950, 800, 850, 900],
-};
-
-const MAX_Y = 1000;
-const Y_TICKS = [1000, 750, 500, 250];
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
 
 const chartConfig: ChartConfig = {
   amount: {
@@ -50,12 +25,28 @@ const chartConfig: ChartConfig = {
   },
 };
 
+const currentYear = new Date().getFullYear();
+const YEARS = Array.from({ length: 5 }, (_, i) => currentYear - i);
+
 export function MonthlySpendingTrend() {
-  const [year, setYear] = useState(YEARS[0]);
-  const data = SPENDING_DATA[year].map((amount, i) => ({
-    month: MONTHS[i],
-    amount,
-  }));
+  const [selectedYear, setSelectedYear] = useState(currentYear);
+  const { data, isLoading } = useGetMonthlySpendingTrendQuery(selectedYear);
+
+  const yTicks = useMemo(() => {
+    if (!data || data.length === 0) {
+      return [0];
+    }
+    const max = Math.max(...data.map((d) => d.amount)) * 1.1;
+    const step = Math.ceil(max / 4 / 50) * 50; // round to nearest 50 for nicer ticks
+    return Array.from({ length: 5 }, (_, i) => i * step);
+  }, [data]);
+  // Memoize maxAmount calculation for performance
+  const maxAmount = useMemo(() => {
+    if (!data || data.length === 0) {
+      return 0;
+    }
+    return Math.max(...data.map((d) => d.amount)) * 1.1;
+  }, [data]);
 
   return (
     <Card className="rounded-2xl bg-white p-6 shadow-sm">
@@ -63,81 +54,90 @@ export function MonthlySpendingTrend() {
         <h2 className="font-medium text-base text-black">
           Monthly Spending Trend
         </h2>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              aria-label="Select year"
-              className="flex min-w-[80px] items-center gap-2 rounded-lg border px-4 py-2 font-normal text-sm"
-              variant="outline"
-            >
-              {year}
-              <ChevronDown aria-hidden="true" className="ml-1 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+        <Select
+          onValueChange={(val) => setSelectedYear(Number(val))}
+          value={String(selectedYear)}
+        >
+          <SelectTrigger
+            aria-label="Select year"
+            className="flex min-w-[80px] items-center gap-2 rounded-lg border px-4 py-2 font-normal text-sm"
+          >
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent align="end">
             {YEARS.map((y) => (
-              <DropdownMenuItem
-                aria-selected={y === year}
-                className={y === year ? 'bg-muted font-semibold' : ''}
+              <SelectItem
+                className={y === selectedYear ? 'bg-muted font-semibold' : ''}
                 key={y}
-                onSelect={() => setYear(y)}
+                value={String(y)}
               >
                 {y}
-              </DropdownMenuItem>
+              </SelectItem>
             ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </SelectContent>
+        </Select>
       </div>
-      <div className="relative w-full">
-        <ChartContainer className="h-64 w-full" config={chartConfig}>
-          <AreaChart data={data}>
-            <XAxis axisLine={false} dataKey="month" tickLine={false} />
-            {/* Vertical dotted lines for each month end except the last */}
-            {data.slice(0, -1).map((d) => (
-              <ReferenceLine
-                ifOverflow="extendDomain"
-                key={`month-end-${d.month}`}
-                stroke="#aaaaaa"
-                strokeDasharray="5 2"
-                x={d.month}
+      <div className="relative h-64 w-full">
+        {isLoading ? (
+          <div className="absolute inset-0 flex items-center justify-center text-gray-500">
+            Loading...
+          </div>
+        ) : null}
+        {data && data?.length === 0 ? (
+          <div className="absolute inset-0 flex items-center justify-center text-gray-500">
+            No spending data available for {selectedYear}
+          </div>
+        ) : (
+          <ChartContainer className="h-full w-full" config={chartConfig}>
+            <AreaChart data={data}>
+              <XAxis axisLine={false} dataKey="month" tickLine={false} />
+              {/* Vertical dotted lines for each month end except the last */}
+              {data?.slice(0, -1).map((d) => (
+                <ReferenceLine
+                  ifOverflow="extendDomain"
+                  key={`month-end-${d.month}`}
+                  stroke="#aaaaaa"
+                  strokeDasharray="5 2"
+                  x={d.month}
+                />
+              ))}
+              <YAxis
+                axisLine={false}
+                domain={[0, maxAmount]}
+                tickFormatter={(v) => `$${v}`}
+                tickLine={true}
+                ticks={yTicks}
               />
-            ))}
-            <YAxis
-              axisLine={false}
-              domain={[0, MAX_Y]}
-              tickFormatter={(v) => `$${v}`}
-              tickLine={true}
-              ticks={Y_TICKS}
-            />
-            <Tooltip
-              contentStyle={{
-                borderRadius: 8,
-                fontSize: 14,
-                background: '#fff',
-                border: '1px solid #eee',
-                color: '#222',
-              }}
-              cursor={{ fill: '#ffe066', fillOpacity: 0.1 }}
-              formatter={(value: number) => [`$${value}`, 'Spending']}
-            />
-            <Area
-              activeDot={{ r: 5 }}
-              aria-label="Monthly spending area"
-              dataKey="amount"
-              fill="url(#area-gradient)"
-              stroke="#ffe066"
-              strokeWidth={2}
-              type="stepAfter"
-            />
-            <defs>
-              <linearGradient id="area-gradient" x1="0" x2="0" y1="0" y2="1">
-                <stop offset="0%" stopColor="#ffe066" stopOpacity={1} />
-                <stop offset="60%" stopColor="#ffe066" stopOpacity={0.4} />
-                <stop offset="100%" stopColor="#ffe066" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-          </AreaChart>
-        </ChartContainer>
+              <Tooltip
+                contentStyle={{
+                  borderRadius: 8,
+                  fontSize: 14,
+                  background: '#fff',
+                  border: '1px solid #eee',
+                  color: '#222',
+                }}
+                cursor={{ fill: '#ffe066', fillOpacity: 0.1 }}
+                formatter={(value: number) => [`$${value}`, 'Spending']}
+              />
+              <Area
+                activeDot={{ r: 5 }}
+                aria-label="Monthly spending area"
+                dataKey="amount"
+                fill="url(#area-gradient)"
+                stroke="#ffe066"
+                strokeWidth={2}
+                type="stepAfter"
+              />
+              <defs>
+                <linearGradient id="area-gradient" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stopColor="#ffe066" stopOpacity={1} />
+                  <stop offset="60%" stopColor="#ffe066" stopOpacity={0.4} />
+                  <stop offset="100%" stopColor="#ffe066" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+            </AreaChart>
+          </ChartContainer>
+        )}
       </div>
     </Card>
   );
