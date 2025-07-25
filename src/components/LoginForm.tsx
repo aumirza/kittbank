@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router';
 import { z } from 'zod';
+import { useLoginMutation } from '@/api/mutations';
 import { LoadingButton } from '@/components/LoadingButton';
 import { PasswordInput } from '@/components/PasswordInput';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -17,7 +18,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from './ui/card';
 
 const loginSchema = z.object({
-  username: z.email(),
+  email: z.email(),
   password: z.string().min(8, 'Password must be at least 8 characters'),
   remember: z.boolean().optional(),
 });
@@ -25,11 +26,12 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginForm() {
+  const { mutateAsync } = useLoginMutation();
   const navigate = useNavigate();
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      username: '',
+      email: '',
       password: '',
       remember: false,
     },
@@ -37,16 +39,18 @@ export default function LoginForm() {
 
   async function onSubmit(_values: LoginFormValues) {
     try {
-      // TODO: Replace with real login logic
-      await new Promise((resolve) => setTimeout(resolve, 1200));
-      // Simulate successful login
+      await mutateAsync({
+        email: _values.email,
+        password: _values.password,
+      });
       navigate('/'); // Redirect to dashboard on success
     } catch (error) {
-      // Handle login error (e.g., show a toast notification)
-      form.setError('root', {
-        type: 'manual',
-        message: error instanceof Error ? error.message : 'Login failed',
-      });
+      if (error instanceof Error) {
+        form.setError('root', {
+          type: 'manual',
+          message: error.message,
+        });
+      }
     }
   }
 
@@ -65,17 +69,13 @@ export default function LoginForm() {
           >
             <FormField
               control={form.control}
-              name="username"
+              name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="font-medium text-sm">
-                    User Name
-                  </FormLabel>
+                  <FormLabel className="font-medium text-sm">Email</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
-                      aria-label="User Name"
-                      autoComplete="username"
                       className="h-10 rounded bg-accent"
                       placeholder="hannah.green@test.com"
                       type="email"
@@ -96,8 +96,6 @@ export default function LoginForm() {
                   <FormControl>
                     <PasswordInput
                       {...field}
-                      aria-label="Password"
-                      autoComplete="current-password"
                       className="h-10 rounded bg-accent"
                       placeholder="Password123@"
                     />
@@ -106,6 +104,13 @@ export default function LoginForm() {
                 </FormItem>
               )}
             />
+
+            {form.formState.errors.root && (
+              <div className="text-red-500 text-sm">
+                {form.formState.errors.root.message}
+              </div>
+            )}
+
             <div className="flex items-center justify-between gap-3">
               <FormField
                 control={form.control}
