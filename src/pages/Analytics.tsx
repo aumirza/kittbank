@@ -1,6 +1,7 @@
 import { ArrowDownIcon, ArrowUpIcon, EllipsisIcon } from 'lucide-react';
 import {
   useGetCurrencySummaryQuery,
+  useGetMonthlyCurrencySummaryQuery,
 } from '@/api/queries';
 import MonthlyChart from '@/components/analytics/MonthlyChart';
 import { PageLayout } from '@/components/PageLayout';
@@ -23,6 +24,8 @@ const getCurrencySymbol = (currency: string) => {
 
 export default function Analytics() {
   const { data } = useGetCurrencySummaryQuery();
+  const { data: monthlyData } = useGetMonthlyCurrencySummaryQuery();
+
   const formattedData = Object.entries(data || {})
     .map(([currency, values]) => {
       const isNegative = values.percentChange < 0;
@@ -37,6 +40,15 @@ export default function Analytics() {
     .sort((a, b) => {
       return a.currency.localeCompare(b.currency);
     });
+
+  const monthlyFormattedData = Object.entries(monthlyData || {}).map(
+    ([_key, val]) => ({
+      currency: val.currency,
+      symbol: getCurrencySymbol(val.currency),
+      value: val.count.toLocaleString(),
+    })
+  );
+
   return (
     <PageLayout className="space-y-6" title="Analytics">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
@@ -81,26 +93,16 @@ export default function Analytics() {
           </CardHeader>
           <CardContent>
             <ul className="space-y-4">
-              {[
-                { currency: 'Euro (EUR)', icon: EuroIcon, value: 54 },
-                {
-                  currency: 'Japanese Yen (JPY)',
-                  icon: JapaneseYenIcon,
-                  value: 54,
-                },
-                {
-                  currency: 'British Pound (GBP)',
-                  icon: PoundSterlingIcon,
-                  value: 54,
-                },
-              ].map((item) => (
+              {monthlyFormattedData.map((item) => (
                 <li
                   className="flex items-center justify-between border-b pb-2"
                   key={item.currency}
                 >
                   <div className="flex items-center space-x-4">
                     <div className="flex size-14 items-center justify-center bg-amber-50">
-                      <item.icon className="size-7 text-primary" />
+                      <span className="font-semibold text-3xl text-primary">
+                        {item.symbol}
+                      </span>
                     </div>
 
                     <span className="font-medium text-gray-700">

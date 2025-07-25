@@ -120,3 +120,22 @@ export const useGetCurrencySummaryQuery = () => {
     refetchOnWindowFocus: false,
   });
 };
+
+// /admin/getMonthlyCurrencySummary
+export const useGetMonthlyCurrencySummaryQuery = () => {
+  return useQuery({
+    queryKey: ['monthlyCurrencySummary'],
+    queryFn: () =>
+      axiosClient.get<
+        IResponse<{
+          [key: string]: {
+            currency: string;
+            count: number;
+            percentChange: number;
+          };
+        }>
+      >('/admin/getMonthlyCurrencySummary'),
+    select: (data) => data.data.data,
+    refetchOnWindowFocus: false,
+  });
+};
