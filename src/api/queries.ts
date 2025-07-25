@@ -1,6 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { axiosClient } from '@/lib/axios';
-import type { IPaginatedResponse, IResponse } from '@/types/response';
+import type {
+  IFinancialSnapshot,
+  IPaginatedResponse,
+  IResponse,
+} from '@/types/response';
 import type { IUserListItem } from '@/types/user';
 
 // /getUser
@@ -17,3 +21,38 @@ export const useGetUsersQuery = () => {
     select: (data) => data.data,
   });
 };
+
+// /getFinancialSnapshot;
+export const useGetFinancialSnapshotQuery = () => {
+  return useQuery({
+    queryKey: ['financialSnapshot'],
+    queryFn: async () => {
+      const { data } = await axiosClient.get<IResponse<IFinancialSnapshot>>(
+        '/getFinancialSnapshot'
+      );
+      return data;
+    },
+    select: (data) => data.data,
+    refetchOnWindowFocus: false,
+  });
+};
+
+// getMonthlySpendingTrend?year=2024
+export const useGetMonthlySpendingTrendQuery = (year: number) => {
+  return useQuery({
+    queryKey: ['monthlySpendingTrend', year],
+    queryFn: async () => {
+      const { data } = await axiosClient.get<
+        IResponse<{
+          year: number;
+          monthlySpending: { month: string; amount: number }[];
+        }>
+      >(`/getMonthlySpendingTrend?year=${year}`);
+      return data;
+    },
+    select: (data) => data.data.monthlySpending,
+    refetchOnWindowFocus: false,
+  });
+};
+
+// Transaction/recentTransaction
