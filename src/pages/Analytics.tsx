@@ -1,24 +1,46 @@
+import { ArrowDownIcon, ArrowUpIcon, EllipsisIcon } from 'lucide-react';
 import {
-  ArrowUpIcon,
-  EllipsisIcon,
-  EuroIcon,
-  JapaneseYenIcon,
-  PoundSterlingIcon,
-} from 'lucide-react';
+  useGetCurrencySummaryQuery,
+} from '@/api/queries';
 import MonthlyChart from '@/components/analytics/MonthlyChart';
 import { PageLayout } from '@/components/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
+const getCurrencySymbol = (currency: string) => {
+  switch (currency) {
+    case 'USD':
+      return '$';
+    case 'EUR':
+      return '€';
+    case 'GBP':
+      return '£';
+    case 'JPY':
+      return '¥';
+    default:
+      return '';
+  }
+};
+
 export default function Analytics() {
+  const { data } = useGetCurrencySummaryQuery();
+  const formattedData = Object.entries(data || {})
+    .map(([currency, values]) => {
+      const isNegative = values.percentChange < 0;
+      return {
+        currency,
+        symbol: getCurrencySymbol(currency),
+        value: values.amount.toLocaleString(),
+        change: `${Math.abs(values.percentChange).toFixed(2)}%`,
+        isNegative,
+      };
+    })
+    .sort((a, b) => {
+      return a.currency.localeCompare(b.currency);
+    });
   return (
     <PageLayout className="space-y-6" title="Analytics">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-        {[
-          { currency: 'USD', symbol: '$', value: '85,234.00', change: '+2.4%' },
-          { currency: 'EUR', symbol: '€', value: '85,234.00', change: '+2.4%' },
-          { currency: 'GBP', symbol: '£', value: '85,234.00', change: '+2.4%' },
-          { currency: 'JPY', symbol: '¥', value: '85,234.00', change: '+2.4%' },
-        ].map((item) => (
+        {formattedData.map((item) => (
           <Card className="rounded-lg border p-4 shadow-sm" key={item.currency}>
             <CardHeader className="flex items-center justify-between border-gray-700 border-b-3 border-dashed pb-2">
               <CardTitle className="font-medium text-gray-500 text-sm">
@@ -31,13 +53,22 @@ export default function Analytics() {
                 {item.symbol}
                 {item.value}
               </div>
-              <div className="flex items-center text-green-500">
-                <ArrowUpIcon className="h-5 w-5" />
+              <div
+                className={`flex items-center ${item.isNegative ? 'text-red-500' : 'text-green-500'}`}
+              >
+                {item.isNegative ? (
+                  <ArrowDownIcon className="h-5 w-5" />
+                ) : (
+                  <ArrowUpIcon className="h-5 w-5" />
+                )}
                 <span className="ml-1 font-medium text-sm">
+                  {item.isNegative ? '-' : '+'}
                   {item.change} Since Last Month
                 </span>
               </div>
-              <div className="h-1 rounded-full bg-green-500" />
+              <div
+                className={`h-1 rounded-full ${item.isNegative ? 'bg-red-500' : 'bg-green-500'}`}
+              />
             </CardContent>
           </Card>
         ))}

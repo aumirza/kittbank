@@ -97,6 +97,25 @@ export const useGetRecentTransactionsQuery = (limit = 5) => {
         IResponse<{
           transactions: IRecentTransaction[];
         }>
+      >(`/admin/getRecentTransactions?limit=${limit}`),
+    select: (data) => data.data.data,
+    refetchOnWindowFocus: false,
+  });
+};
+
+// /admin/getCurrencySummary
+export const useGetCurrencySummaryQuery = () => {
+  return useQuery({
+    queryKey: ['currencySummary'],
+    queryFn: () =>
+      axiosClient.get<
+        IResponse<{
+          [key: string]: {
+            amount: number;
+            percentChange: number;
+          };
+        }>
+      >('/admin/getCurrencySummary'),
     select: (data) => data.data.data,
     refetchOnWindowFocus: false,
   });
