@@ -5,6 +5,7 @@ import type {
   IPaginatedResponse,
   IResponse,
 } from '@/types/response';
+import type { ITransaction } from '@/types/transaction';
 import type { IUserListItem } from '@/types/user';
 
 // /getUser
@@ -69,6 +70,21 @@ export const useGetMonthlyTransactionPieChartQuery = () => {
           }[]
         >
       >('/admin/getMonthlyTransactionPieChart');
+      return data;
+    },
+    select: (data) => data.data,
+    refetchOnWindowFocus: false,
+  });
+};
+
+// Transaction/recentTransaction/
+export const useGetRecentTransactionsQuery = () => {
+  return useQuery({
+    queryKey: ['recentTransactions'],
+    queryFn: async () => {
+      const { data } = await axiosClient.get<
+        IResponse<IPaginatedResponse<ITransaction>>
+      >('/Transaction/recentTransaction');
       return data;
     },
     select: (data) => data.data,
