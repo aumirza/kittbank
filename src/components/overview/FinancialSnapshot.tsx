@@ -1,33 +1,36 @@
 import { InfoIcon } from 'lucide-react';
+import { useGetFinancialSnapshotQuery } from '@/api/queries';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function FinancialSnapshot() {
-  const totalBalance = 525_380.0;
-  const monthlySpending = 3220.5;
-  const monthlyIncome = 5200.0;
-  const upcomingPayments = 8;
-  const savingsRate = 28;
+  const { data } = useGetFinancialSnapshotQuery();
 
   const metrics = [
     {
       title: 'Total Balance',
-      value: `$${totalBalance.toLocaleString()}`,
+      value: data?.totalBalance
+        ? `$${data.totalBalance.toLocaleString()}`
+        : '$0',
     },
     {
       title: 'Monthly Spending',
-      value: `$${monthlySpending.toLocaleString()}`,
+      value: data?.monthlySpending
+        ? `$${data.monthlySpending.toLocaleString()}`
+        : '$0',
     },
     {
       title: 'Income This Month',
-      value: `$${monthlyIncome.toLocaleString()}`,
+      value: data?.incomeThisMonth
+        ? `$${data.incomeThisMonth.toLocaleString()}`
+        : '$0',
     },
     {
       title: 'Upcoming Payments',
-      value: `${upcomingPayments} Payments`,
+      value: `${data?.upcomingPayments} Payments`,
     },
     {
       title: 'Savings Rate',
-      value: `${savingsRate}%`,
+      value: `${data?.savingsRate}`,
     },
   ];
 
