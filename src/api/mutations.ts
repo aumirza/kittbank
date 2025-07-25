@@ -9,7 +9,7 @@ export function useLoginMutation() {
     mutationKey: ['login'],
     mutationFn: async (data: { email: string; password: string }) => {
       try {
-        const response = await axiosClient.post('/signin', data);
+        const response = await axiosClient.post('/admin/signin', data);
         login(response.data.accessToken, response.data.data);
         return response;
       } catch (error: unknown) {
