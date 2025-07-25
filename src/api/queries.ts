@@ -78,9 +78,9 @@ export const useGetMonthlyTransactionPieChartQuery = () => {
 };
 
 // Transaction/recentTransaction/
-export const useGetRecentTransactionsQuery = () => {
+export const useGetAllTransactionsQuery = () => {
   return useQuery({
-    queryKey: ['recentTransactions'],
+    queryKey: ['allTransactions'],
     queryFn: async () => {
       const { data } = await axiosClient.get<
         IResponse<IPaginatedResponse<ITransaction>>

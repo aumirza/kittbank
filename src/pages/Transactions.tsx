@@ -1,9 +1,11 @@
 import { InfoIcon, TrendingUpIcon } from 'lucide-react';
+import { useGetAllTransactionsQuery } from '@/api/queries';
 import { DataTable } from '@/components/DataTable';
 import { PageLayout } from '@/components/PageLayout';
 import { transactionColumns } from '@/components/transactions/TransactionColumns';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { transactionsData } from '@/data/transactions';
+
+// import { transactionsData } from '@/data/transactions';
 
 const metricsData = [
   {
@@ -59,6 +61,7 @@ const currencyData = [
 ];
 
 export default function Transactions() {
+  const { data } = useGetAllTransactionsQuery();
   return (
     <PageLayout
       className="space-y-6"
@@ -136,13 +139,19 @@ export default function Transactions() {
       </div>
 
       {/* Transactions Table */}
-      <DataTable
-        columns={transactionColumns}
-        data={transactionsData}
-        showPagination={true}
-        showToolbar={true}
-        title="Recent Transactions"
-      />
+      {data?.docs && data?.docs?.length > 0 ? (
+        <DataTable
+          columns={transactionColumns}
+          data={data.docs}
+          showPagination={true}
+          showToolbar={true}
+          title="Recent Transactions"
+        />
+      ) : (
+        <div className="text-center text-muted-foreground">
+          No recent transactions found.
+        </div>
+      )}
     </PageLayout>
   );
 }
