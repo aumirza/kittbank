@@ -1,9 +1,9 @@
 export interface IUser {
-  userId: string;
-  name: string;
-  totalTransaction: string;
-  toPendingTicket: string;
-  amount: string;
-  currency: string;
-  platform: string;
+  id: string;
+  fullName: string;
+  firstName: string;
+  lastName: string;
+  mobileNumber: string;
+  email: string;
+  userType: 'ADMIN' | 'USER';
 }
