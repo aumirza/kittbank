@@ -1,5 +1,7 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { lazy, Suspense } from 'react';
 import { Route, type RouteObject, Routes } from 'react-router';
+import { AuthWrapper } from './components/AuthWrapper';
 import DashboardLayout from './components/DashboardLayout';
 import { LoadingScreen } from './components/LoadingScreen';
 
@@ -25,21 +27,35 @@ const routes: RouteObject[] = [
   { path: '/account', element: <AccountPage /> },
 ];
 
+const queryClient = new QueryClient();
+
 function App() {
   return (
-    <Suspense fallback={<LoadingScreen />}>
-      <Routes>
-        {authRoutes.map((route) => (
-          <Route element={route.element} key={route.path} path={route.path} />
-        ))}
-        <Route element={<DashboardLayout />}>
-          {routes.map((route) => (
+    <QueryClientProvider client={queryClient}>
+      <Suspense fallback={<LoadingScreen />}>
+        <Routes>
+          {authRoutes.map((route) => (
             <Route element={route.element} key={route.path} path={route.path} />
           ))}
-        </Route>
-        <Route element={<NotFoundPage />} path="*" />
-      </Routes>
-    </Suspense>
+          <Route
+            element={
+              <AuthWrapper>
+                <DashboardLayout />
+              </AuthWrapper>
+            }
+          >
+            {routes.map((route) => (
+              <Route
+                element={route.element}
+                key={route.path}
+                path={route.path}
+              />
+            ))}
+          </Route>
+          <Route element={<NotFoundPage />} path="*" />
+        </Routes>
+      </Suspense>
+    </QueryClientProvider>
   );
 }
 
