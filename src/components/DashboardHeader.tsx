@@ -9,15 +9,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { usePage } from '@/hooks/usePage';
-
-const user = {
-  name: 'Filippo Inzaghi',
-  email: 'filizanghi@finsight.co',
-  avatarUrl: '/src/assets/images/kittbank-logo.jpg',
-};
+import { useAuthStore } from '@/stores/authStore';
 
 export default function DashboardHeader() {
   const { title, description } = usePage();
+  const user = useAuthStore((state) => state.user);
+  if (!user) {
+    return null;
+  } // Ensure user is defined
 
   return (
     <header className="flex items-center justify-between rounded-xl bg-white px-6 py-4 shadow-sm">
@@ -39,14 +38,15 @@ export default function DashboardHeader() {
               variant="ghost"
             >
               <Avatar className="size-10">
-                <AvatarImage alt={user.name} src={user.avatarUrl} />
+                <AvatarImage alt={user.firstName} />
                 <AvatarFallback>
-                  {user.name.slice(0, 2).toUpperCase()}
+                  {user.firstName.charAt(0).toUpperCase() +
+                    user.lastName.charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div className="flex flex-col items-start text-left">
                 <span className="font-medium text-gray-900 text-sm">
-                  {user.name}
+                  {`${user.firstName} ${user.lastName}`}
                 </span>
                 <span className="text-gray-500 text-xs">{user.email}</span>
               </div>
