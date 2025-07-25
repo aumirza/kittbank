@@ -21,7 +21,7 @@ const formatAmount = (amount: number): string => {
 
 export const transactionColumns: ColumnDef<ITransaction>[] = [
   {
-    accessorKey: 'name',
+    accessorKey: 'Id',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Transactions" />
     ),
@@ -37,13 +37,13 @@ export const transactionColumns: ColumnDef<ITransaction>[] = [
     },
   },
   {
-    accessorKey: 'fromUser',
+    accessorKey: 'senderFirstName',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="From" />
     ),
   },
   {
-    accessorKey: 'toUser',
+    accessorKey: 'payerFirstName',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="To" />
     ),
