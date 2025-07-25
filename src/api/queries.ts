@@ -56,3 +56,24 @@ export const useGetMonthlySpendingTrendQuery = (year: number) => {
 };
 
 // Transaction/recentTransaction
+
+// /getMonthlyTransactionPieChart
+export const useGetMonthlyTransactionPieChartQuery = () => {
+  return useQuery({
+    queryKey: ['monthlyTransactionPieChart'],
+    queryFn: async () => {
+      const { data } = await axiosClient.get<
+        IResponse<
+          {
+            currency: string;
+            count: number;
+            percentage: string;
+          }[]
+        >
+      >('/getMonthlyTransactionPieChart');
+      return data;
+    },
+    select: (data) => data.data,
+    refetchOnWindowFocus: false,
+  });
+};

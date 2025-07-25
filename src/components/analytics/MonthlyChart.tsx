@@ -1,4 +1,5 @@
 import { Cell, Pie, PieChart, Sector, Tooltip } from 'recharts';
+import { useGetMonthlyTransactionPieChartQuery } from '@/api/queries';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Select,
@@ -10,36 +11,8 @@ import {
 import { type ChartConfig, ChartContainer } from '../ui/chart';
 
 export default function MonthlyChart() {
+  const { data: dynamicData = [] } = useGetMonthlyTransactionPieChartQuery();
   const SORT_OPTIONS = ['Date', 'Amount'];
-  const CURRENCIES = [
-    { name: 'US Dollar', code: 'USD' },
-    { name: 'Euro', code: 'EUR' },
-    { name: 'British Pound', code: 'GBP' },
-    { name: 'Japanese Yen', code: 'JPY' },
-    { name: 'Chinese Yuan', code: 'CNY' },
-    { name: 'Swedish Krona', code: 'SEK' },
-    { name: 'Spanish Pesetas', code: 'ESP' },
-  ];
-
-  const data = [
-    { name: 'USD', value: 15.3 },
-    { name: 'EUR', value: 14.0 },
-    { name: 'GBP', value: 14.0 },
-    { name: 'JPY', value: 11.3 },
-    { name: 'CNY', value: 9.3 },
-    { name: 'SEK', value: 8.0 },
-    { name: 'ESP', value: 6.7 },
-  ];
-
-  const COLORS = [
-    '#FF6384',
-    '#36A2EB',
-    '#FFCE56',
-    '#4BC0C0',
-    '#9966FF',
-    '#FF9F40',
-    '#FFCD56',
-  ];
 
   const chartConfig: ChartConfig = {
     USD: {
@@ -72,7 +45,23 @@ export default function MonthlyChart() {
     },
   };
 
-  const totalValue = data.reduce((sum, item) => sum + item.value, 0);
+  // Generate currencies from dynamic data
+  const CURRENCIES = dynamicData.map((item) => ({
+    name: chartConfig[item.currency]?.label ?? item.currency,
+    code: item.currency,
+  }));
+
+  const COLORS = [
+    '#FF6384',
+    '#36A2EB',
+    '#FFCE56',
+    '#4BC0C0',
+    '#9966FF',
+    '#FF9F40',
+    '#FFCD56',
+  ];
+
+  const totalValue = dynamicData.reduce((sum, item) => sum + item.count, 0);
   const dynamicOuterRadius = Math.min(100, totalValue * 5);
 
   return (
@@ -96,7 +85,7 @@ export default function MonthlyChart() {
       </CardHeader>
       <CardContent className="flex gap-8">
         <div className="w-1/2">
-          <ChartContainer className="h-full w-full" config={chartConfig}>
+          <ChartContainer className="h-56 w-full" config={chartConfig}>
             <PieChart>
               <Pie
                 activeIndex={0}
@@ -105,16 +94,19 @@ export default function MonthlyChart() {
                 )}
                 cx="50%"
                 cy="50%"
-                data={data}
-                dataKey="value"
-                label={({ name, percent }) =>
-                  `${name} (${(percent * 100).toFixed(0)}%)`
+                data={dynamicData}
+                dataKey="count"
+                label={({ currency, percent }) =>
+                  `${currency} (${(percent * 100).toFixed(0)}%)`
                 }
-                nameKey="name"
+                nameKey="currency"
                 outerRadius={dynamicOuterRadius}
               >
-                {data.map((entry, index) => (
-                  <Cell fill={COLORS[index % COLORS.length]} key={entry.name} />
+                {dynamicData.map((entry, index) => (
+                  <Cell
+                    fill={COLORS[index % COLORS.length]}
+                    key={entry.currency}
+                  />
                 ))}
               </Pie>
               <Tooltip />
