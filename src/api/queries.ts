@@ -60,8 +60,8 @@ export const useGetMonthlySpendingTrendQuery = (year: number) => {
 export const useGetMonthlyTransactionPieChartQuery = () => {
   return useQuery({
     queryKey: ['monthlyTransactionPieChart'],
-    queryFn: async () => {
-      const { data } = await axiosClient.get<
+    queryFn: () =>
+      axiosClient.get<
         IResponse<
           {
             currency: string;
@@ -69,10 +69,8 @@ export const useGetMonthlyTransactionPieChartQuery = () => {
             percentage: string;
           }[]
         >
-      >('/admin/getMonthlyTransactionPieChart');
-      return data;
-    },
-    select: (data) => data.data,
+      >('/admin/getMonthlyTransactionPieChart'),
+    select: (data) => data.data.data,
     refetchOnWindowFocus: false,
   });
 };
@@ -81,13 +79,11 @@ export const useGetMonthlyTransactionPieChartQuery = () => {
 export const useGetAllTransactionsQuery = () => {
   return useQuery({
     queryKey: ['allTransactions'],
-    queryFn: async () => {
-      const { data } = await axiosClient.get<
-        IResponse<IPaginatedResponse<ITransaction>>
-      >('/Transaction/recentTransaction');
-      return data;
-    },
-    select: (data) => data.data,
+    queryFn: () =>
+      axiosClient.get<IResponse<IPaginatedResponse<ITransaction>>>(
+        '/Transaction/recentTransaction'
+      ),
+    select: (data) => data.data.data,
     refetchOnWindowFocus: false,
   });
 };
@@ -96,15 +92,12 @@ export const useGetAllTransactionsQuery = () => {
 export const useGetRecentTransactionsQuery = (limit = 5) => {
   return useQuery({
     queryKey: ['recentTransactions', limit],
-    queryFn: async () => {
-      const { data } = await axiosClient.get<
+    queryFn: () =>
+      axiosClient.get<
         IResponse<{
           transactions: IRecentTransaction[];
         }>
-      >(`/admin/getRecentTransactions?limit=${limit}`);
-      return data;
-    },
-    select: (data) => data.data,
+    select: (data) => data.data.data,
     refetchOnWindowFocus: false,
   });
 };
