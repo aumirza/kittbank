@@ -14,7 +14,7 @@ export const useGetUsersQuery = () => {
     queryFn: async () => {
       const { data } =
         await axiosClient.get<IResponse<IPaginatedResponse<IUserListItem>>>(
-          '/getUser'
+          '/admin/getUser'
         );
       return data;
     },
@@ -28,7 +28,7 @@ export const useGetFinancialSnapshotQuery = () => {
     queryKey: ['financialSnapshot'],
     queryFn: async () => {
       const { data } = await axiosClient.get<IResponse<IFinancialSnapshot>>(
-        '/getFinancialSnapshot'
+        '/admin/getFinancialSnapshot'
       );
       return data;
     },
@@ -47,15 +47,13 @@ export const useGetMonthlySpendingTrendQuery = (year: number) => {
           year: number;
           monthlySpending: { month: string; amount: number }[];
         }>
-      >(`/getMonthlySpendingTrend?year=${year}`);
+      >(`/admin/getMonthlySpendingTrend?year=${year}`);
       return data;
     },
     select: (data) => data.data.monthlySpending,
     refetchOnWindowFocus: false,
   });
 };
-
-// Transaction/recentTransaction
 
 // /getMonthlyTransactionPieChart
 export const useGetMonthlyTransactionPieChartQuery = () => {
@@ -70,7 +68,7 @@ export const useGetMonthlyTransactionPieChartQuery = () => {
             percentage: string;
           }[]
         >
-      >('/getMonthlyTransactionPieChart');
+      >('/admin/getMonthlyTransactionPieChart');
       return data;
     },
     select: (data) => data.data,
