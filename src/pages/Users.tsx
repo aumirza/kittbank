@@ -1,9 +1,11 @@
 import { InfoIcon } from 'lucide-react';
+import { useGetUsersQuery } from '@/api/queries';
 import { DataTable } from '@/components/DataTable';
 import { PageLayout } from '@/components/PageLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import { userColumns } from '@/components/users/UserColumns';
-import { usersData } from '@/data/users';
+
+// import { usersData } from '@/data/users';
 
 const metricsData = [
   {
@@ -32,6 +34,7 @@ const metricsData = [
 ];
 
 export default function Users() {
+  const { data, isLoading } = useGetUsersQuery();
   return (
     <PageLayout
       className="space-y-6"
@@ -63,13 +66,18 @@ export default function Users() {
       </Card>
 
       {/* Users Table */}
-      <DataTable
-        columns={userColumns}
-        data={usersData}
-        showPagination={true}
-        showToolbar={true}
-        title="User List"
-      />
+      {isLoading && (
+        <div className="flex h-64 items-center justify-center">
+          <span>Loading...</span>
+        </div>
+      )}
+      {!isLoading && data ? (
+        <DataTable columns={userColumns} data={data.docs} showToolbar />
+      ) : (
+        <div className="flex h-64 items-center justify-center">
+          <span>No users found</span>
+        </div>
+      )}
     </PageLayout>
   );
 }

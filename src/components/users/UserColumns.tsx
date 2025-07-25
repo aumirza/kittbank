@@ -9,18 +9,18 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import type { IUser } from '@/types/user';
+import type { IUserListItem } from '@/types/user';
 import { DataTableColumnHeader } from '../DataTableColumnHeader';
 
-export const userColumns: ColumnDef<IUser>[] = [
+export const userColumns: ColumnDef<IUserListItem>[] = [
   {
-    accessorKey: 'userId',
+    accessorKey: 'id',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="User ID" />
     ),
   },
   {
-    accessorKey: 'name',
+    accessorKey: 'firstName',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Name" />
     ),
