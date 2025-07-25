@@ -5,7 +5,7 @@ import type {
   IPaginatedResponse,
   IResponse,
 } from '@/types/response';
-import type { ITransaction } from '@/types/transaction';
+import type { IRecentTransaction, ITransaction } from '@/types/transaction';
 import type { IUserListItem } from '@/types/user';
 
 // /getUser
@@ -85,6 +85,23 @@ export const useGetAllTransactionsQuery = () => {
       const { data } = await axiosClient.get<
         IResponse<IPaginatedResponse<ITransaction>>
       >('/Transaction/recentTransaction');
+      return data;
+    },
+    select: (data) => data.data,
+    refetchOnWindowFocus: false,
+  });
+};
+
+// /admin/getRecentTransactions?limit=5
+export const useGetRecentTransactionsQuery = (limit = 5) => {
+  return useQuery({
+    queryKey: ['recentTransactions', limit],
+    queryFn: async () => {
+      const { data } = await axiosClient.get<
+        IResponse<{
+          transactions: IRecentTransaction[];
+        }>
+      >(`/admin/getRecentTransactions?limit=${limit}`);
       return data;
     },
     select: (data) => data.data,

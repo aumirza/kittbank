@@ -70,3 +70,10 @@ export interface ITransaction {
   updatedAt: string;
   __v: number;
 }
+
+export interface IRecentTransaction {
+  date: string;
+  description: string;
+  category: string;
+  amount: string;
+}
