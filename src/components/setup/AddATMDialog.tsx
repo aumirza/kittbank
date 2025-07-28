@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { useAddAtmMutation } from '@/api/mutations';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -21,30 +22,49 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { getErrorMessage } from '@/utils/getErrorMessage';
+import { LoadingButton } from '../LoadingButton';
 import { LocationInput } from './LocationInput';
 
 const atmSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   company: z.string().min(1, 'Company is required'),
   machine: z.string().min(1, 'Machine type is required'),
-  location: z.string().min(1, 'Location is required'),
+  locationInWord: z.string().min(1, 'Location is required'),
+  latitude: z.number().min(-90, 'Invalid latitude').max(90, 'Invalid latitude'),
+  longitude: z
+    .number()
+    .min(-180, 'Invalid longitude')
+    .max(180, 'Invalid longitude'),
 });
 
 export function AddATMDialog({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
-  const form = useForm({
+
+  const { mutateAsync } = useAddAtmMutation();
+
+  const form = useForm<z.infer<typeof atmSchema>>({
     resolver: zodResolver(atmSchema),
     defaultValues: {
       name: '',
       company: '',
       machine: '',
-      location: '',
+      locationInWord: '',
+      latitude: 0,
+      longitude: 0,
     },
   });
 
-  const onSubmit = () => {
-    // Handle form submission logic here
-    setIsOpen(false);
+  const onSubmit = (values: z.infer<typeof atmSchema>) => {
+    try {
+      mutateAsync(values);
+    } catch (error) {
+      form.setError('root', {
+        type: 'manual',
+        message:
+          getErrorMessage(error) || 'Failed to add ATM. Please try again.',
+      });
+    }
   };
 
   return (
@@ -123,7 +143,7 @@ export function AddATMDialog({ children }: { children: React.ReactNode }) {
 
             <FormField
               control={form.control}
-              name="location"
+              name="locationInWord"
               render={() => (
                 <FormItem className="mt-8">
                   <FormLabel>
@@ -135,7 +155,15 @@ export function AddATMDialog({ children }: { children: React.ReactNode }) {
                         markerType="atm"
                         onChange={(search) => {
                           if (search) {
-                            form.setValue('location', search.name);
+                            form.setValue('locationInWord', search.name);
+                            form.setValue(
+                              'latitude',
+                              search.coordinates.latitude
+                            );
+                            form.setValue(
+                              'longitude',
+                              search.coordinates.longitude
+                            );
                           }
                         }}
                       />
@@ -158,12 +186,13 @@ export function AddATMDialog({ children }: { children: React.ReactNode }) {
               >
                 Clear
               </Button>
-              <Button
+              <LoadingButton
                 className="bg-green-600 px-6 hover:bg-green-700"
+                isLoading={form.formState.isSubmitting}
                 type="submit"
               >
                 Save
-              </Button>
+              </LoadingButton>
             </DialogFooter>
           </form>
         </Form>
