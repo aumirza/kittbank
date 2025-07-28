@@ -14,6 +14,7 @@ import branchMarker from '@/assets/images/branch-marker.png';
 import { useReverseGeocode } from '@/hooks/useReverseGeocode';
 import type { SearchBoxFeatureProperties } from '@/lib/mapbox';
 import { Loader } from '../Loader';
+import { Button } from '../ui/button';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN ?? '';
 
@@ -25,7 +26,10 @@ function LocationInputInner({
   onChange: (search: SearchBoxFeatureProperties | null) => void;
 }) {
   const [search, setSearch] = useState<SearchBoxFeatureProperties | null>(null);
+  const [satellite, setSatellite] = useState(false);
   const mapRef = useRef<MapRef | null>(null);
+  // Ref to skip flyTo after drag
+  const skipNextFlyTo = useRef(false);
 
   const { reverseGeocode } = useReverseGeocode();
 
@@ -37,11 +41,13 @@ function LocationInputInner({
 
   const handleMapDragEnd = async () => {
     if (mapRef.current) {
+      // ...existing code...
       const map = mapRef.current.getMap();
       const center = map.getCenter();
       const coords = { latitude: center.lat, longitude: center.lng };
       const result = await reverseGeocode(coords);
       if (result) {
+        skipNextFlyTo.current = true;
         setSearch(result);
         onChange(result);
       }
@@ -49,15 +55,23 @@ function LocationInputInner({
   };
 
   useEffect(() => {
+    if (skipNextFlyTo.current) {
+      skipNextFlyTo.current = false;
+      return;
+    }
     if (mapRef.current && search) {
       const map = mapRef.current.getMap();
       map.flyTo({
         center: [search.coordinates.longitude, search.coordinates.latitude],
-        zoom: 14,
+        zoom: 20,
         essential: true, // This ensures the animation is not interrupted
       });
     }
   }, [search]);
+
+  // Map style URLs
+  const normalStyle = 'mapbox://styles/mapbox/streets-v11';
+  const satelliteStyle = 'mapbox://styles/mapbox/satellite-streets-v12';
 
   return (
     <div className="relative h-full w-full">
@@ -76,10 +90,20 @@ function LocationInputInner({
         )}
         value={search?.name || ''}
       />
+      {/* Toggle button for map style */}
+      <div className="absolute top-2 right-2 z-30">
+        <Button
+          className="rounded-full text-foreground"
+          onClick={() => setSatellite((prev) => !prev)}
+          type="button"
+        >
+          {satellite ? 'Normal' : 'Satellite'}
+        </Button>
+      </div>
       <MapBoxMap
         initialViewState={initialViewState}
         mapboxAccessToken={MAPBOX_TOKEN}
-        mapStyle="mapbox://styles/mapbox/streets-v11"
+        mapStyle={satellite ? satelliteStyle : normalStyle}
         onDragEnd={handleMapDragEnd}
         ref={mapRef}
         style={{ width: '100%', height: '100%' }}
