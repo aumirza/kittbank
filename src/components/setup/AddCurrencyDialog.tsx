@@ -21,6 +21,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import type { ICurrency } from '@/types/currency';
 import { getErrorMessage } from '@/utils/getErrorMessage';
 import { LoadingButton } from '../LoadingButton';
 
@@ -34,18 +35,31 @@ const currencySchema = z.object({
 
 type CurrencyFormData = z.infer<typeof currencySchema>;
 
-export function AddCurrencyDialog({ children }: { children: React.ReactNode }) {
-  const [isOpen, setIsOpen] = useState(false);
+interface AddCurrencyDialogProps {
+  children?: React.ReactNode;
+  currency?: Partial<ICurrency>;
+  isEdit?: boolean;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}
+
+export function AddCurrencyDialog({
+  children,
+  currency,
+  open = false,
+  onOpenChange,
+}: AddCurrencyDialogProps) {
+  const [isOpen, setIsOpen] = useState(open);
   const { mutateAsync } = useAddCurrencyMutation();
 
   const form = useForm({
     resolver: zodResolver(currencySchema),
     defaultValues: {
-      name: '',
-      code: '',
-      symbol: '',
+      name: currency?.name || '',
+      code: currency?.code || '',
+      symbol: currency?.symbol || '',
       value: '',
-      autoUpdate: true,
+      autoUpdate: currency?.autoUpdate ?? true,
     },
   });
 
@@ -62,8 +76,18 @@ export function AddCurrencyDialog({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const handleChange = (toOpen: boolean) => {
+    setIsOpen(toOpen);
+    if (onOpenChange) {
+      onOpenChange(toOpen);
+    }
+    if (!toOpen) {
+      form.reset();
+    }
+  };
+
   return (
-    <Dialog onOpenChange={setIsOpen} open={isOpen}>
+    <Dialog onOpenChange={handleChange} open={isOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="overflow-auto sm:max-h-[90vh] sm:max-w-4xl">
         <DialogHeader className="border-b pb-5">
