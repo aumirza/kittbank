@@ -3,6 +3,7 @@ import axios from 'axios';
 import { axiosClient } from '@/lib/axios';
 import { useAuthStore } from '@/stores/authStore';
 import type { IATM } from '@/types/atm';
+import type { ICurrency } from '@/types/currency';
 
 export function useLoginMutation() {
   const login = useAuthStore((state) => state.login);
@@ -28,5 +29,13 @@ export function useAddAtmMutation() {
     mutationKey: ['addAtm'],
     mutationFn: (data: Partial<IATM>) =>
       axiosClient.post('/admin/Atm/addAtm', data),
+  });
+}
+
+export function useAddCurrencyMutation() {
+  return useMutation({
+    mutationKey: ['addCurrency'],
+    mutationFn: (data: Partial<ICurrency>) =>
+      axiosClient.post('/admin/Currency/addCurrency', data),
   });
 }
