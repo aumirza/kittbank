@@ -3,9 +3,11 @@ import { formatRelative } from 'date-fns';
 import {
   FunnelIcon,
   MoreVertical,
+  PencilLine,
   PlusIcon,
   SearchIcon,
   StickyNoteIcon,
+  Trash2,
   UploadIcon,
 } from 'lucide-react';
 import { useState } from 'react';
@@ -52,19 +54,44 @@ const currencyColumns: ColumnDef<ICurrency>[] = [
   {
     accessorKey: 'action',
     header: 'Action',
-    cell: () => (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button aria-label="More actions" size="icon" variant="ghost">
-            <MoreVertical className="h-4 w-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem>Edit</DropdownMenuItem>
-          <DropdownMenuItem>Delete</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    ),
+    cell: () => {
+      const [openAddCurrency, setOpenAddCurrency] = useState(false);
+      return (
+        <>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button aria-label="More actions" size="icon" variant="ghost">
+                <MoreVertical className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="w-40 rounded-xl border border-gray-200 shadow-lg"
+            >
+              <DropdownMenuItem
+                className="flex items-center gap-3 px-4 py-3 text-base text-gray-800 hover:bg-gray-100 focus:bg-gray-100"
+                onClick={() => setOpenAddCurrency(true)}
+              >
+                <PencilLine className="h-5 w-5 text-[rgb(108,71,255)]" />
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="flex items-center gap-3 px-4 py-3 text-base text-red-500 hover:bg-red-50 focus:bg-red-50"
+              >
+                <Trash2 className="h-5 w-5 text-[#FF5A5F]" />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <AddCurrencyDialog
+            currency={undefined}
+            isEdit={true}
+            onOpenChange={setOpenAddCurrency}
+            open={openAddCurrency}
+          />
+        </>
+      );
+    },
   },
 ];
 
