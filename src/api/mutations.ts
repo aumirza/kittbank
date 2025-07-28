@@ -2,6 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { axiosClient } from '@/lib/axios';
 import { useAuthStore } from '@/stores/authStore';
+import type { IATM } from '@/types/atm';
 
 export function useLoginMutation() {
   const login = useAuthStore((state) => state.login);
@@ -25,13 +26,7 @@ export function useLoginMutation() {
 export function useAddAtmMutation() {
   return useMutation({
     mutationKey: ['addAtm'],
-    mutationFn: async (data: {
-      name: string;
-      company: string;
-      machine: string;
-      locationInWord: string;
-      latitude: number;
-      longitude: number;
-    }) => axiosClient.post('/admin/Atm/addAtm', data),
+    mutationFn: (data: Partial<IATM>) =>
+      axiosClient.post('/admin/Atm/addAtm', data),
   });
 }
