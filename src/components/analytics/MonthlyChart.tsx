@@ -8,10 +8,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Skeleton } from '@/components/ui/skeleton';
 import { type ChartConfig, ChartContainer } from '../ui/chart';
 
-export default function MonthlyChart() {
-  const { data: dynamicData = [] } = useGetMonthlyTransactionPieChartQuery();
+export function MonthlyChart() {
+  const { data: dynamicData = [], isLoading } =
+    useGetMonthlyTransactionPieChartQuery();
   const SORT_OPTIONS = ['Date', 'Amount'];
 
   const chartConfig: ChartConfig = {
@@ -84,46 +86,72 @@ export default function MonthlyChart() {
         </div>
       </CardHeader>
       <CardContent className="flex gap-8">
-        <div className="w-1/2">
-          <ChartContainer className="h-56 w-full" config={chartConfig}>
-            <PieChart>
-              <Pie
-                activeIndex={0}
-                activeShape={({ outerRadius = 0, ...props }) => (
-                  <Sector {...props} outerRadius={(outerRadius || 0) + 10} />
-                )}
-                cx="50%"
-                cy="50%"
-                data={dynamicData}
-                dataKey="count"
-                label={({ currency, percent }) =>
-                  `${currency} (${(percent * 100).toFixed(0)}%)`
-                }
-                nameKey="currency"
-                outerRadius={dynamicOuterRadius}
-              >
-                {dynamicData.map((entry, index) => (
-                  <Cell
-                    fill={COLORS[index % COLORS.length]}
-                    key={entry.currency}
+        {isLoading ? (
+          <>
+            <div className="flex w-1/2 flex-col items-center justify-center">
+              <Skeleton className="size-40 rounded-full" />
+            </div>
+            <ul className="w-1/2 list-disc space-y-3 pl-3">
+              {[
+                'pie-skeleton-1',
+                'pie-skeleton-2',
+                'pie-skeleton-3',
+                'pie-skeleton-4',
+              ].map((key) => (
+                <li className="flex items-center gap-2" key={key}>
+                  <Skeleton className="h-3 w-3 rounded-full" />
+                  <Skeleton className="h-4 w-24" />
+                </li>
+              ))}
+            </ul>
+          </>
+        ) : (
+          <>
+            <div className="w-1/2">
+              <ChartContainer className="h-56 w-full" config={chartConfig}>
+                <PieChart>
+                  <Pie
+                    activeIndex={0}
+                    activeShape={({ outerRadius = 0, ...props }) => (
+                      <Sector
+                        {...props}
+                        outerRadius={(outerRadius || 0) + 10}
+                      />
+                    )}
+                    cx="50%"
+                    cy="50%"
+                    data={dynamicData}
+                    dataKey="count"
+                    label={({ currency, percent }) =>
+                      `${currency} (${(percent * 100).toFixed(0)}%)`
+                    }
+                    nameKey="currency"
+                    outerRadius={dynamicOuterRadius}
+                  >
+                    {dynamicData.map((entry, index) => (
+                      <Cell
+                        fill={COLORS[index % COLORS.length]}
+                        key={entry.currency}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ChartContainer>
+            </div>
+            <ul className="list-disc space-y-3 pl-3">
+              {CURRENCIES.map((currency, index) => (
+                <li className="flex items-center gap-2" key={currency.code}>
+                  <span
+                    className="h-3 w-3 rounded-full"
+                    style={{ backgroundColor: COLORS[index % COLORS.length] }}
                   />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ChartContainer>
-        </div>
-        <ul className="list-disc space-y-3 pl-3">
-          {CURRENCIES.map((currency, index) => (
-            <li className="flex items-center gap-2" key={currency.code}>
-              <span
-                className="h-3 w-3 rounded-full"
-                style={{ backgroundColor: COLORS[index % COLORS.length] }}
-              />
-              {currency.name} ({currency.code})
-            </li>
-          ))}
-        </ul>
+                  {currency.name} ({currency.code})
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
       </CardContent>
     </Card>
   );
