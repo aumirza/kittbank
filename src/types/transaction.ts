@@ -77,3 +77,18 @@ export interface IRecentTransaction {
   category: string;
   amount: string;
 }
+
+export interface ICurrencyStat {
+  currency: string;
+  amount: number;
+  comparedToLastMonthPercent: number;
+}
+
+export interface ITransactionsDashboardResponse {
+  totalActiveTransaction: number;
+  monthlySpending: number;
+  avgTransactionTime: number;
+  topSendingCountry: string;
+  topReceivingCountry: string;
+  currencyStats: ICurrencyStat[];
+}

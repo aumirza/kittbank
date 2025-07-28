@@ -5,7 +5,11 @@ import type {
   IPaginatedResponse,
   IResponse,
 } from '@/types/response';
-import type { IRecentTransaction, ITransaction } from '@/types/transaction';
+import type {
+  IRecentTransaction,
+  ITransaction,
+  ITransactionsDashboardResponse,
+} from '@/types/transaction';
 import type { IUserListItem } from '@/types/user';
 
 // /getUser
@@ -135,6 +139,19 @@ export const useGetMonthlyCurrencySummaryQuery = () => {
           };
         }>
       >('/admin/getMonthlyCurrencySummary'),
+    select: (data) => data.data.data,
+    refetchOnWindowFocus: false,
+  });
+};
+
+//Transaction/getDashboard
+export const useGetTransactionsDashboardQuery = () => {
+  return useQuery({
+    queryKey: ['transactionsDashboard'],
+    queryFn: () =>
+      axiosClient.get<IResponse<ITransactionsDashboardResponse>>(
+        '/Transaction/getDashboard'
+      ),
     select: (data) => data.data.data,
     refetchOnWindowFocus: false,
   });
