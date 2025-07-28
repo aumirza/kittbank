@@ -3,6 +3,7 @@ import { Outlet } from 'react-router';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from './AppSidebar';
 import DashboardHeader from './DashboardHeader';
+import { Toaster } from './ui/sonner';
 
 export default function DashboardLayout() {
   return (
@@ -23,7 +24,7 @@ export default function DashboardLayout() {
             <Outlet />
           </div>
         </SidebarInset>
-        {/* <Toaster /> */}
+        <Toaster />
       </SidebarProvider>
     </div>
   );
