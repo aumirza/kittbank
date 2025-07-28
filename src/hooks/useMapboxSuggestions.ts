@@ -3,7 +3,7 @@ import type { SearchBoxSuggestion } from '@/lib/mapbox';
 import { suggestMapbox } from '@/lib/mapbox';
 import { debounce } from '@/utils/debounce';
 
-const types = {
+export const placeTypes = {
   city: ['place'],
   region: ['region'],
   address: ['address', 'street', 'locality', 'neighborhood'],
@@ -14,7 +14,7 @@ export function useMapboxSuggestions(
   {
     type,
   }: {
-    type?: 'city' | 'region' | 'address';
+    type?: keyof typeof placeTypes;
   } = {}
 ) {
   const [suggestions, setSuggestions] = useState<SearchBoxSuggestion[]>([]);
@@ -70,7 +70,7 @@ export function useMapboxSuggestions(
           const suggestionsResult = await suggestMapbox(queryValue, {
             limit: 5,
             navigation_profile: 'driving',
-            types: types[type || 'address'].join(','),
+            types: placeTypes[type || 'address'].join(','),
           });
           handleSuggestions(suggestionsResult, active);
         } catch (err: unknown) {
