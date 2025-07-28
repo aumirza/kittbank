@@ -42,7 +42,7 @@ export default function FinancialSnapshot() {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5">
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-5">
           {metrics.map((metric, index) => {
             const isLast = index === metrics.length - 1;
             return (
@@ -56,7 +56,7 @@ export default function FinancialSnapshot() {
                   </span>
                   <InfoIcon className="h-4 w-4" />
                 </div>
-                <div className={'font-bold text-2xl'}>{metric.value}</div>
+                <div className={'font-bold text-xl'}>{metric.value}</div>
               </div>
             );
           })}
