@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { axiosClient } from '@/lib/axios';
+import type { IATM } from '@/types/atm';
 import type {
   IFinancialSnapshot,
   IPaginatedResponse,
@@ -164,6 +165,17 @@ export const useGetUsersDashboardQuery = () => {
     queryFn: () =>
       axiosClient.get<IUsersDashboardResponse>('/admin/getDashboard'),
     select: (data) => data.data,
+    refetchOnWindowFocus: false,
+  });
+};
+
+// /admin/Atm/allAtm
+export const useGetAllAtmsQuery = () => {
+  return useQuery({
+    queryKey: ['allAtms'],
+    queryFn: () =>
+      axiosClient.get<IResponse<IPaginatedResponse<IATM>>>('/admin/Atm/allAtm'),
+    select: (data) => data.data.data,
     refetchOnWindowFocus: false,
   });
 };

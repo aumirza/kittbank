@@ -1,3 +1,4 @@
+import type { ColumnDef } from '@tanstack/react-table';
 import {
   FunnelIcon,
   PlusIcon,
@@ -5,44 +6,41 @@ import {
   StickyNoteIcon,
   UploadIcon,
 } from 'lucide-react';
+import { useGetAllAtmsQuery } from '@/api/queries';
 import { DataTable } from '@/components/DataTable';
 import { Card, CardContent } from '@/components/ui/card';
+import type { IATM } from '@/types/atm';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { AddATMDialog } from './AddATMDialog';
 import { ListMapSwitcher } from './ListMapSwitcher';
 
-export function ATMList() {
-  const atmData = {
-    atmId: 'ATM001',
-    name: 'MG Road ATM',
-    location: 'MG Road, Bangalore',
-    company: 'KittBank',
-    type: 'Withdrawal Only',
-  };
+const atmColumns: ColumnDef<IATM>[] = [
+  {
+    accessorKey: '_id',
+    header: 'ATM ID',
+  },
+  {
+    accessorKey: 'name',
+    header: 'Name',
+  },
+  {
+    accessorKey: 'locationInWord',
+    header: 'Location',
+  },
+  {
+    accessorKey: 'company',
+    header: 'Company',
+  },
+  {
+    accessorKey: 'machine',
+    header: 'Type',
+  },
+];
 
-  const atmColumns = [
-    {
-      accessorKey: 'atmId',
-      header: 'ATM ID',
-    },
-    {
-      accessorKey: 'name',
-      header: 'Name',
-    },
-    {
-      accessorKey: 'location',
-      header: 'Location',
-    },
-    {
-      accessorKey: 'company',
-      header: 'Company',
-    },
-    {
-      accessorKey: 'type',
-      header: 'Type',
-    },
-  ];
+export function ATMList() {
+  const { data: atmData, isLoading } = useGetAllAtmsQuery();
+
   return (
     <Card>
       <CardContent>
@@ -87,7 +85,8 @@ export function ATMList() {
         </div>
         <DataTable
           columns={atmColumns}
-          data={new Array(10).fill(atmData)}
+          data={atmData?.docs}
+          isLoading={isLoading}
           showPagination={true}
           showToolbar={false}
         />
