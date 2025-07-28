@@ -1,3 +1,5 @@
+import type { ColumnDef } from '@tanstack/react-table';
+import { formatRelative } from 'date-fns';
 import {
   FunnelIcon,
   MoreVertical,
@@ -7,6 +9,7 @@ import {
   UploadIcon,
 } from 'lucide-react';
 import { useState } from 'react';
+import { useGetAllCurrenciesQuery } from '@/api/queries';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -16,113 +19,58 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
+import type { ICurrency } from '@/types/currency';
 import { DataTable } from '../DataTable';
 import { AddCurrencyDialog } from './AddCurrencyDialog';
 
+const currencyColumns: ColumnDef<ICurrency>[] = [
+  { accessorKey: 'code', header: 'Code' },
+  { accessorKey: 'name', header: 'Name' },
+  { accessorKey: 'symbol', header: 'Symbol' },
+  {
+    accessorKey: 'value',
+    header: () => (
+      <span>
+        Value in Admin
+        <br />
+        Region (INR/AED)
+      </span>
+    ),
+  },
+  { accessorKey: 'autoUpdate', header: 'Auto-Update' },
+  {
+    accessorKey: 'updatedAt',
+    header: 'Last Updated',
+    cell: ({ row }) => {
+      return (
+        <div>
+          {formatRelative(new Date(row.getValue('updatedAt')), new Date())}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'action',
+    header: 'Action',
+    cell: () => (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button aria-label="More actions" size="icon" variant="ghost">
+            <MoreVertical className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem>Edit</DropdownMenuItem>
+          <DropdownMenuItem>Delete</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    ),
+  },
+];
+
 export function CurrencyTab() {
   const [search, setSearch] = useState('');
-
-  const currencyData = [
-    {
-      code: 'USD',
-      name: 'US Dollar',
-      symbol: '$',
-      value: '₹83.12',
-      autoUpdate: 'ON',
-      lastUpdated: 'Apr 18, 2025 10:42',
-    },
-    {
-      code: 'AED',
-      name: 'UAE Dirham',
-      symbol: 'د.إ',
-      value: '₹22.64',
-      autoUpdate: 'ON',
-      lastUpdated: 'Apr 18, 2025 10:42',
-    },
-    {
-      code: 'EUR',
-      name: 'Euro',
-      symbol: '€',
-      value: '₹89.45',
-      autoUpdate: 'ON',
-      lastUpdated: 'Apr 18, 2025 10:42',
-    },
-    {
-      code: 'JPY',
-      name: 'Japanese Yen',
-      symbol: '¥',
-      value: '₹0.56',
-      autoUpdate: 'ON',
-      lastUpdated: 'Apr 18, 2025 10:42',
-    },
-    {
-      code: 'CAD',
-      name: 'Canadian Dollar',
-      symbol: 'C$',
-      value: '₹61.20',
-      autoUpdate: 'ON',
-      lastUpdated: 'Apr 18, 2025 10:42',
-    },
-    {
-      code: 'AUD',
-      name: 'Australian Dollar',
-      symbol: 'A$',
-      value: '₹55.35',
-      autoUpdate: 'ON',
-      lastUpdated: 'Apr 18, 2025 10:42',
-    },
-    {
-      code: 'CHF',
-      name: 'Swiss Franc',
-      symbol: 'CHF',
-      value: '₹92.14',
-      autoUpdate: 'ON',
-      lastUpdated: 'Apr 18, 2025 10:42',
-    },
-    {
-      code: 'CNY',
-      name: 'Chinese Yuan',
-      symbol: '¥',
-      value: '₹11.46',
-      autoUpdate: 'ON',
-      lastUpdated: 'Apr 18, 2025 10:42',
-    },
-  ];
-
-  const currencyColumns = [
-    { accessorKey: 'code', header: 'Code' },
-    { accessorKey: 'name', header: 'Name' },
-    { accessorKey: 'symbol', header: 'Symbol' },
-    {
-      accessorKey: 'value',
-      header: () => (
-        <span>
-          Value in Admin
-          <br />
-          Region (INR/AED)
-        </span>
-      ),
-    },
-    { accessorKey: 'autoUpdate', header: 'Auto-Update' },
-    { accessorKey: 'lastUpdated', header: 'Last Updated' },
-    {
-      accessorKey: 'action',
-      header: 'Action',
-      cell: () => (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button aria-label="More actions" size="icon" variant="ghost">
-              <MoreVertical className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      ),
-    },
-  ];
+  const { data: currencyData, isLoading } = useGetAllCurrenciesQuery();
 
   return (
     <Card>
@@ -168,7 +116,8 @@ export function CurrencyTab() {
         </div>
         <DataTable
           columns={currencyColumns}
-          data={currencyData}
+          data={currencyData?.docs}
+          isLoading={isLoading}
           showPagination={true}
           showToolbar={false}
         />
