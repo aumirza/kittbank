@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { axiosClient } from '@/lib/axios';
 import type { IATM } from '@/types/atm';
+import type { ICurrency } from '@/types/currency';
 import type {
   IFinancialSnapshot,
   IPaginatedResponse,
@@ -175,6 +176,19 @@ export const useGetAllAtmsQuery = () => {
     queryKey: ['allAtms'],
     queryFn: () =>
       axiosClient.get<IResponse<IPaginatedResponse<IATM>>>('/admin/Atm/allAtm'),
+    select: (data) => data.data.data,
+    refetchOnWindowFocus: false,
+  });
+};
+
+// {{url}}/admin/Currency/allCurrency
+export const useGetAllCurrenciesQuery = () => {
+  return useQuery({
+    queryKey: ['allCurrencies'],
+    queryFn: () =>
+      axiosClient.get<IResponse<IPaginatedResponse<ICurrency>>>(
+        '/admin/Currency/allCurrency'
+      ),
     select: (data) => data.data.data,
     refetchOnWindowFocus: false,
   });
