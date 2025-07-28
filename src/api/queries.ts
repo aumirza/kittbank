@@ -10,7 +10,7 @@ import type {
   ITransaction,
   ITransactionsDashboardResponse,
 } from '@/types/transaction';
-import type { IUserListItem } from '@/types/user';
+import type { IUserListItem, IUsersDashboardResponse } from '@/types/user';
 
 // /getUser
 export const useGetUsersQuery = () => {
@@ -153,6 +153,17 @@ export const useGetTransactionsDashboardQuery = () => {
         '/Transaction/getDashboard'
       ),
     select: (data) => data.data.data,
+    refetchOnWindowFocus: false,
+  });
+};
+
+///admin/getDashboard
+export const useGetUsersDashboardQuery = () => {
+  return useQuery({
+    queryKey: ['dashboard'],
+    queryFn: () =>
+      axiosClient.get<IUsersDashboardResponse>('/admin/getDashboard'),
+    select: (data) => data.data,
     refetchOnWindowFocus: false,
   });
 };

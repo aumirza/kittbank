@@ -35,3 +35,11 @@ export interface IUser {
   email: string;
   userType: 'ADMIN' | 'USER';
 }
+
+export interface IUsersDashboardResponse {
+  newUsers: number;
+  incomingTransfers: number;
+  outgoingTransfers: number;
+  kycPending: number;
+  suspendedAccounts: number;
+}
