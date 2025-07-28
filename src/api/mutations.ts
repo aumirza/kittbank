@@ -39,3 +39,11 @@ export function useAddCurrencyMutation() {
       axiosClient.post('/admin/Currency/addCurrency', data),
   });
 }
+//{{url}}/admin/Currency/deleteCurrency/{{id}} DELETE
+export function useDeleteCurrencyMutation() {
+  return useMutation({
+    mutationKey: ['deleteCurrency'],
+    mutationFn: (id: string) =>
+      axiosClient.delete(`/admin/Currency/deleteCurrency/${id}`),
+  });
+}

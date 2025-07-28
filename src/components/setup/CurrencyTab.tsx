@@ -11,6 +11,8 @@ import {
   UploadIcon,
 } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from 'sonner';
+import { useDeleteCurrencyMutation } from '@/api/mutations';
 import { useGetAllCurrenciesQuery } from '@/api/queries';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -22,6 +24,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import type { ICurrency } from '@/types/currency';
+import { ConfirmDialog } from '../ConfirmDialog';
 import { DataTable } from '../DataTable';
 import { AddCurrencyDialog } from './AddCurrencyDialog';
 
@@ -54,8 +57,21 @@ const currencyColumns: ColumnDef<ICurrency>[] = [
   {
     accessorKey: 'action',
     header: 'Action',
-    cell: () => {
+    cell: ({ row }) => {
+      const { mutateAsync } = useDeleteCurrencyMutation();
+      const [openConfirm, setOpenConfirm] = useState(false);
       const [openAddCurrency, setOpenAddCurrency] = useState(false);
+
+      const handleDelete = async () => {
+        try {
+          await mutateAsync(row.original._id);
+          setOpenConfirm(false);
+          toast.success('Currency deleted successfully');
+        } catch {
+          toast.error('Failed to delete currency');
+        }
+      };
+
       return (
         <>
           <DropdownMenu>
@@ -77,12 +93,21 @@ const currencyColumns: ColumnDef<ICurrency>[] = [
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="flex items-center gap-3 px-4 py-3 text-base text-red-500 hover:bg-red-50 focus:bg-red-50"
+                onClick={() => setOpenConfirm(true)}
               >
                 <Trash2 className="h-5 w-5 text-[#FF5A5F]" />
                 Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          <ConfirmDialog
+            onConfirm={handleDelete}
+            onOpenChange={setOpenConfirm}
+            open={openConfirm}
+            title={
+              'Are you sure you want to delete this currency? This action cannot be undone.'
+            }
+          />
           <AddCurrencyDialog
             currency={undefined}
             isEdit={true}
