@@ -15,7 +15,9 @@ interface ConfirmDialogProps {
   /**
    * The element that triggers the dialog (e.g., a button).
    */
-  children: ReactNode;
+  children?: ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
   /**
    * Dialog title (required, visible to screen readers).
    */
@@ -50,10 +52,16 @@ export function ConfirmDialog({
   cancelLabel = 'Cancel',
   onConfirm,
   loading = false,
+  open = false,
+  onOpenChange,
 }: ConfirmDialogProps) {
-  const [open, setOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(open);
+  const handleChange = (isOpen: boolean) => {
+    setDialogOpen(isOpen);
+    onOpenChange?.(isOpen);
+  };
   return (
-    <AlertDialog onOpenChange={setOpen} open={open}>
+    <AlertDialog onOpenChange={handleChange} open={dialogOpen}>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -63,7 +71,7 @@ export function ConfirmDialog({
           ) : null}
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={() => setOpen(false)}>
+          <AlertDialogCancel onClick={() => handleChange(false)}>
             {cancelLabel}
           </AlertDialogCancel>
           <AlertDialogAction
