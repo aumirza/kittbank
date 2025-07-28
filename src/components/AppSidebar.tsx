@@ -52,7 +52,7 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="border-border/40 border-t p-4">
-        <SidebarMenu>
+        <SidebarMenu className="gap-0">
           <SidebarMenuItem>
             <NavLink className="flex w-full" end to="/account">
               {({ isActive }) => (

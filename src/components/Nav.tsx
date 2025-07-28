@@ -40,18 +40,18 @@ export const NavSidebarMenuButton = forwardRef<
       )}
       <div
         className={cn(
-          'flex size-10 items-center justify-center rounded-full bg-accent',
+          'flex size-8 items-center justify-center rounded-full bg-accent',
           { 'bg-primary': isActive, 'bg-accent': !isActive },
           { 'group-hover/menu-item:bg-primary': !isActive }
         )}
       >
         <Icon
-          className={cn('size-5 shrink-0 transition-all duration-200', {
+          className={cn('size-4 shrink-0 transition-all duration-200', {
             'text-white': isActive,
           })}
         />
       </div>
-      <span className={cn('text-xl', { 'font-semibold': isActive })}>
+      <span className={cn('text-lg', { 'font-semibold': isActive })}>
         {title}
       </span>
     </SidebarMenuButton>
@@ -94,7 +94,7 @@ const navigationItems = [
 
 export function Nav() {
   return (
-    <SidebarMenu className="gap-1">
+    <SidebarMenu className="gap-0">
       {navigationItems.map((item) => (
         <SidebarMenuItem key={item.title}>
           <NavLink className="flex w-full" end to={item.url}>
