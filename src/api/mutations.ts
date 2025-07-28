@@ -4,6 +4,7 @@ import { axiosClient } from '@/lib/axios';
 import { useAuthStore } from '@/stores/authStore';
 import type { IATM } from '@/types/atm';
 import type { ICurrency } from '@/types/currency';
+import type { IUser } from '@/types/user';
 
 export function useLoginMutation() {
   const login = useAuthStore((state) => state.login);
@@ -39,6 +40,16 @@ export function useAddCurrencyMutation() {
       axiosClient.post('/admin/Currency/addCurrency', data),
   });
 }
+
+// /admin/update
+export function useUpdateUserMutation() {
+  return useMutation({
+    mutationKey: ['updateUser'],
+    mutationFn: (data: Partial<IUser & { phone: string }>) =>
+      axiosClient.put('/admin/update', data),
+  });
+}
+
 //{{url}}/admin/Currency/deleteCurrency/{{id}} DELETE
 export function useDeleteCurrencyMutation() {
   return useMutation({
