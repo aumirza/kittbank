@@ -11,7 +11,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { useMapboxSuggestions } from '@/hooks/useMapboxSuggestions';
+import {
+  type placeTypes,
+  useMapboxSuggestions,
+} from '@/hooks/useMapboxSuggestions';
 import { useRetrieveMapboxSuggestion } from '@/hooks/useRetrieveMapboxSuggestion';
 import { cn } from '@/lib/utils';
 import { Input } from './ui/input';
@@ -24,17 +27,22 @@ interface MapSearchInputProps {
   render?: (
     inputProps: InputHTMLAttributes<HTMLInputElement>
   ) => React.ReactNode;
-  type?: 'city' | 'region' | 'address';
+  type?: keyof typeof placeTypes;
 }
 
 export function MapSearchInput({
+  value = '',
   placeholder,
   className,
   onChange,
   render,
   type,
 }: MapSearchInputProps) {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(value);
+  // Sync query state with value prop
+  useEffect(() => {
+    setQuery(value);
+  }, [value]);
   const [open, setOpen] = useState(false);
   const { suggestions, loading } = useMapboxSuggestions(query, { type });
   const { retrieve } = useRetrieveMapboxSuggestion();

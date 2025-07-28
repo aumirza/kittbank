@@ -74,6 +74,7 @@ function LocationInputInner({
             />
           </div>
         )}
+        value={search?.name || ''}
       />
       <MapBoxMap
         initialViewState={initialViewState}
