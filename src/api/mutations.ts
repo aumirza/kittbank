@@ -21,3 +21,17 @@ export function useLoginMutation() {
     },
   });
 }
+
+export function useAddAtmMutation() {
+  return useMutation({
+    mutationKey: ['addAtm'],
+    mutationFn: async (data: {
+      name: string;
+      company: string;
+      machine: string;
+      locationInWord: string;
+      latitude: number;
+      longitude: number;
+    }) => axiosClient.post('/admin/Atm/addAtm', data),
+  });
+}
