@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { useAddCurrencyMutation } from '@/api/mutations';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -20,6 +21,8 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { getErrorMessage } from '@/utils/getErrorMessage';
+import { LoadingButton } from '../LoadingButton';
 
 const currencySchema = z.object({
   name: z.string().min(1, 'Currency Name is required'),
@@ -33,6 +36,8 @@ type CurrencyFormData = z.infer<typeof currencySchema>;
 
 export function AddCurrencyDialog({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
+  const { mutateAsync } = useAddCurrencyMutation();
+
   const form = useForm({
     resolver: zodResolver(currencySchema),
     defaultValues: {
@@ -44,9 +49,17 @@ export function AddCurrencyDialog({ children }: { children: React.ReactNode }) {
     },
   });
 
-  const onSubmit = (_data: CurrencyFormData) => {
-    setIsOpen(false);
-    form.reset();
+  const onSubmit = async (data: CurrencyFormData) => {
+    try {
+      await mutateAsync(data);
+      setIsOpen(false);
+    } catch (error) {
+      form.setError('root', {
+        type: 'manual',
+        message:
+          getErrorMessage(error) || 'Failed to add currency. Please try again.',
+      });
+    }
   };
 
   return (
@@ -166,6 +179,11 @@ export function AddCurrencyDialog({ children }: { children: React.ReactNode }) {
                 )}
               />
             </div>
+            {form.formState.errors.root && (
+              <p className="text-red-500">
+                {form.formState.errors.root.message}
+              </p>
+            )}
             <DialogFooter className="mt-6 flex w-full justify-center gap-2">
               <Button
                 className="px-6"
@@ -178,12 +196,13 @@ export function AddCurrencyDialog({ children }: { children: React.ReactNode }) {
               >
                 Clear
               </Button>
-              <Button
+              <LoadingButton
                 className="bg-green-600 px-6 hover:bg-green-700"
+                isLoading={form.formState.isSubmitting}
                 type="submit"
               >
                 Save
-              </Button>
+              </LoadingButton>
             </DialogFooter>
           </form>
         </Form>
