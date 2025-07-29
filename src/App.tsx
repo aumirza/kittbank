@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { lazy, Suspense } from 'react';
 import { Route, type RouteObject, Routes } from 'react-router';
+import { AuthLayout } from './components/AuthLayout';
 import { AuthWrapper } from './components/AuthWrapper';
 import DashboardLayout from './components/DashboardLayout';
 import { LoadingScreen } from './components/LoadingScreen';
@@ -34,9 +35,15 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <Suspense fallback={<LoadingScreen />}>
         <Routes>
-          {authRoutes.map((route) => (
-            <Route element={route.element} key={route.path} path={route.path} />
-          ))}
+          <Route element={<AuthLayout />}>
+            {authRoutes.map((route) => (
+              <Route
+                element={route.element}
+                key={route.path}
+                path={route.path}
+              />
+            ))}
+          </Route>
           <Route
             element={
               <AuthWrapper>
