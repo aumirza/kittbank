@@ -3,12 +3,14 @@ import { toast } from 'sonner';
 import { useCreateOrUpdatePageMutation } from '@/api/mutations';
 import {
   useGetAboutUsQuery,
+  useGetContactDetailsQuery,
   useGetCookiesPolicyQuery,
   useGetPrivacyQuery,
   useGetReturnRefundPolicyQuery,
   useGetTermsQuery,
 } from '@/api/queries';
 import { PageLayout } from '@/components/PageLayout';
+import { ContactForm } from '@/components/settings/ContactForm';
 import { PageForm } from '@/components/settings/PageForm';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -19,6 +21,7 @@ const tabs = [
   { label: 'Return & Refund Policy', value: 'returnRefund' },
   { label: 'Cookies Policy', value: 'cookies' },
   { label: 'Terms & Conditions', value: 'terms' },
+  { label: 'Contact Details', value: 'contact' },
 ];
 
 export default function Settings() {
@@ -32,6 +35,9 @@ export default function Settings() {
     tabValue === 'cookies'
   );
   const { data: TermsData } = useGetTermsQuery(tabValue === 'terms');
+  const { data: ContactData } = useGetContactDetailsQuery(
+    tabValue === 'contact'
+  );
   const { mutateAsync } = useCreateOrUpdatePageMutation();
 
   const dataMap = {
@@ -40,6 +46,7 @@ export default function Settings() {
     returnRefund: tabValue === 'returnRefund' ? ReturnRefundData : null,
     cookies: tabValue === 'cookies' ? CookiesData : null,
     terms: tabValue === 'terms' ? TermsData : null,
+    contact: tabValue === 'contact' ? ContactData : null,
   };
 
   const handleFormSubmit = async (_values: {
@@ -69,26 +76,32 @@ export default function Settings() {
       title="Settings"
     >
       {/* Sidebar */}
-      <div className="@md:1/3 m-3 flex h-full flex-col items-center rounded-2xl bg-background p-6 shadow-md lg:w-1/4">
-        <div className="mb-2 text-center">
+      <div className="m-3 flex h-full @md:w-1/4 flex-col rounded-2xl bg-background p-6 shadow-md lg:w-1/4">
+        <div className="mb-6 w-full text-center">
           <h2 className="font-bold text-xl">Manage security</h2>
         </div>
-        <Tabs className="w-full" onValueChange={setTabValue} value={tabValue}>
-          <TabsList className="mt-10 flex w-full flex-col gap-0 bg-transparent p-0 shadow-none">
-            {tabs.map((tab) => (
-              <TabsTrigger
-                className={
-                  'mb-2 flex w-full items-center justify-start rounded-lg px-5 py-3 text-left font-medium text-base transition-colors data-[state=active]:bg-primary'
-                }
-                key={tab.value}
-                value={tab.value}
-              >
-                {/* {Icon && <Icon aria-hidden="true" className="mr-3 h-5 w-5" />} */}
-                {tab.label}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
+        <div className="flex flex-1 flex-col">
+          <Tabs
+            className="flex h-full w-full flex-col"
+            onValueChange={setTabValue}
+            value={tabValue}
+          >
+            <TabsList className="flex h-auto w-full flex-col gap-0 bg-transparent p-0 shadow-none">
+              {tabs.map((tab) => (
+                <TabsTrigger
+                  className={
+                    'mb-2 flex w-full items-center justify-start rounded-lg px-5 py-3 text-left font-medium text-base transition-colors data-[state=active]:bg-primary'
+                  }
+                  key={tab.value}
+                  value={tab.value}
+                >
+                  {/* {Icon && <Icon aria-hidden="true" className="mr-3 h-5 w-5" />} */}
+                  {tab.label}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
+        </div>
       </div>
 
       {/* Main Content */}
@@ -102,10 +115,17 @@ export default function Settings() {
             </div>
             <Separator />
 
-            <PageForm
-              defaultValues={dataMap[tabValue as keyof typeof dataMap]?.data}
-              onSubmit={handleFormSubmit}
-            />
+            {tabValue === 'contact' ? (
+              <ContactForm defaultValues={dataMap.contact?.data} />
+            ) : (
+              <PageForm
+                defaultValues={
+                  dataMap[tabValue as Exclude<keyof typeof dataMap, 'contact'>]
+                    ?.data
+                }
+                onSubmit={handleFormSubmit}
+              />
+            )}
           </TabsContent>
         </Tabs>
       </div>
