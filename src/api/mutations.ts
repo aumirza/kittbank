@@ -127,6 +127,12 @@ export const useCreateOrUpdatePageMutation = () => {
           return axiosClient.post('/static/createAboutus', data);
         case 'privacy':
           return axiosClient.post('/static/createPrivacy', data);
+        case 'returnRefund':
+          return axiosClient.post('/static/createReturnRefundPolicy', data);
+        case 'cookies':
+          return axiosClient.post('/static/createCookiesPolicy', data);
+        case 'terms':
+          return axiosClient.post('/static/createTerms', data);
         default:
           throw new Error('Invalid type');
       }
@@ -135,6 +141,9 @@ export const useCreateOrUpdatePageMutation = () => {
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['aboutUs'] });
       queryClient.invalidateQueries({ queryKey: ['privacy'] });
+      queryClient.invalidateQueries({ queryKey: ['returnRefundPolicy'] });
+      queryClient.invalidateQueries({ queryKey: ['cookiesPolicy'] });
+      queryClient.invalidateQueries({ queryKey: ['terms'] });
     },
   });
 };
