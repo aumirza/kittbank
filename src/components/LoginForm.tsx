@@ -25,7 +25,7 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
-export default function LoginForm() {
+export function LoginForm() {
   const { mutateAsync } = useLoginMutation();
   const navigate = useNavigate();
   const form = useForm<LoginFormValues>({
