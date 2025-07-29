@@ -18,9 +18,12 @@ const AnalyticsPage = lazy(() => import('./pages/Analytics'));
 const SetupPage = lazy(() => import('./pages/Setup'));
 const AccountPage = lazy(() => import('./pages/Account'));
 
+const ForgotPasswordPage = lazy(() => import('./pages/ForgotPassword'));
+
 const authRoutes: RouteObject[] = [
   { path: '/login', element: <LoginPage /> },
   { path: '/register', element: <RegisterPage /> },
+  { path: '/forgot-password', element: <ForgotPasswordPage /> },
 ];
 
 const routes: RouteObject[] = [
