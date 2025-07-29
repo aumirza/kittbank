@@ -1,8 +1,8 @@
 import { Lock, Settings, User } from 'lucide-react';
 import { useState } from 'react';
 import { AccountForm } from '@/components/account/AccountForm';
+import { UserInfo } from '@/components/account/UserInfo';
 import { PageLayout } from '@/components/PageLayout';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -22,18 +22,7 @@ export default function AccountPage() {
     >
       {/* Sidebar */}
       <aside className="@md:1/3 m-3 flex h-full flex-col items-center rounded-2xl bg-background p-6 shadow-md lg:w-1/4">
-        <div className="mb-8 flex w-full items-center gap-3">
-          <Avatar className="h-12 w-12">
-            <AvatarImage />
-            <AvatarFallback>FI</AvatarFallback>
-          </Avatar>
-          <div className="flex-1">
-            <div className="font-semibold text-base">Filippo Inzaghi</div>
-            <div className="text-muted-foreground text-xs">
-              filizanghi@finsight.co
-            </div>
-          </div>
-        </div>
+        <UserInfo />
         <Tabs className="w-full" onValueChange={setTabValue} value={tabValue}>
           <TabsList className="mt-10 flex w-full flex-col gap-0 bg-transparent p-0 shadow-none">
             {tabs.map((tab) => {
