@@ -116,3 +116,22 @@ export function useDeleteCurrencyMutation() {
       axiosClient.delete(`/admin/Currency/deleteCurrency/${id}`),
   });
 }
+
+// {{url}}/static/createAboutus
+export const useCreateOrUpdatePageMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ type, data }: { type: string; data: FormData }) => {
+      switch (type) {
+        case 'about':
+          return axiosClient.post('/static/createAboutus', data);
+        default:
+          throw new Error('Invalid type');
+      }
+    },
+    mutationKey: ['createOrUpdatePage'],
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['aboutUs'] });
+    },
+  });
+};
