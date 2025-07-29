@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { useCreateOrUpdatePageMutation } from '@/api/mutations';
 import { useGetAboutUsQuery } from '@/api/queries';
 import { PageLayout } from '@/components/PageLayout';
 import { PageForm } from '@/components/settings/PageForm';
@@ -11,6 +12,7 @@ const tabs = [{ label: 'About us', value: 'about' }];
 export default function Settings() {
   const [tabValue, setTabValue] = useState('about');
   const { data: AboutData } = useGetAboutUsQuery(tabValue === 'about');
+  const { mutateAsync } = useCreateOrUpdatePageMutation();
 
   const dataMap = {
     about: AboutData,
@@ -30,7 +32,7 @@ export default function Settings() {
       formData.append('image', '');
     }
     try {
-      // await mutateAsync({ type: tabValue, data: formData });
+      await mutateAsync({ type: tabValue, data: formData });
       toast.success('Settings saved successfully!');
     } catch {
       toast.error('Failed to save settings. Please try again.');
