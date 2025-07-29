@@ -58,6 +58,13 @@ export function PageForm({ onSubmit, defaultValues }: PageFormProps) {
         description: defaultValues.description || '',
         image: defaultValues.image || undefined,
       });
+    } else {
+      // Reset to empty values when no data
+      form.reset({
+        title: '',
+        description: '',
+        image: undefined,
+      });
     }
   }, [defaultValues, form]);
 
