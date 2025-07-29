@@ -1,21 +1,26 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { useCreateOrUpdatePageMutation } from '@/api/mutations';
-import { useGetAboutUsQuery } from '@/api/queries';
+import { useGetAboutUsQuery, useGetPrivacyQuery } from '@/api/queries';
 import { PageLayout } from '@/components/PageLayout';
 import { PageForm } from '@/components/settings/PageForm';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-const tabs = [{ label: 'About us', value: 'about' }];
+const tabs = [
+  { label: 'About us', value: 'about' },
+  { label: 'Privacy Policy', value: 'privacy' },
+];
 
 export default function Settings() {
   const [tabValue, setTabValue] = useState('about');
   const { data: AboutData } = useGetAboutUsQuery(tabValue === 'about');
+  const { data: PrivacyData } = useGetPrivacyQuery(tabValue === 'privacy');
   const { mutateAsync } = useCreateOrUpdatePageMutation();
 
   const dataMap = {
     about: AboutData,
+    privacy: PrivacyData,
   };
 
   const handleFormSubmit = async (_values: {

@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { axiosClient } from '@/lib/axios';
 import type { IATM } from '@/types/atm';
 import type { ICurrency } from '@/types/currency';
+import type { IStaticPageData } from '@/types/page';
 import type {
   IFinancialSnapshot,
   IPaginatedResponse,
@@ -201,6 +202,17 @@ export const useGetAboutUsQuery = (enabled: boolean) => {
     enabled,
     queryFn: () =>
       axiosClient.get<IResponse<IStaticPageData>>('/static/getAboutUs'),
+    select: (data) => data.data,
+  });
+};
+
+// {{url}}/static/getPrivacy
+export const useGetPrivacyQuery = (enabled: boolean) => {
+  return useQuery({
+    queryKey: ['privacy'],
+    enabled,
+    queryFn: () =>
+      axiosClient.get<IResponse<IStaticPageData>>('/static/getPrivacy'),
     select: (data) => data.data,
   });
 };
