@@ -62,6 +62,15 @@ export function useForgotPasswordMutation() {
   });
 }
 
+//admin/forgotVerifyOtp
+export function useForgotVerifyOtpMutation() {
+  return useMutation({
+    mutationKey: ['forgotVerifyOtp'],
+    mutationFn: (data: { email: string; otp: string }) =>
+      axiosClient.post('/admin/forgotVerifyOtp', data),
+  });
+}
+
 export function useAddAtmMutation() {
   return useMutation({
     mutationKey: ['addAtm'],
