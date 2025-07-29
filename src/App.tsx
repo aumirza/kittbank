@@ -1,4 +1,4 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { lazy, Suspense } from 'react';
 import { Route, type RouteObject, Routes } from 'react-router';
 import { AuthLayout } from './components/AuthLayout';
@@ -8,6 +8,7 @@ import { LoadingScreen } from './components/LoadingScreen';
 import { queryClient } from './lib/queryclient';
 
 const LoginPage = lazy(() => import('./pages/Login'));
+const RegisterPage = lazy(() => import('./pages/Register'));
 const OverviewPage = lazy(() => import('./pages/Overview'));
 const TicketsPage = lazy(() => import('./pages/Tickets'));
 const NotFoundPage = lazy(() => import('./pages/NotFound'));
@@ -17,7 +18,10 @@ const AnalyticsPage = lazy(() => import('./pages/Analytics'));
 const SetupPage = lazy(() => import('./pages/Setup'));
 const AccountPage = lazy(() => import('./pages/Account'));
 
-const authRoutes: RouteObject[] = [{ path: '/login', element: <LoginPage /> }];
+const authRoutes: RouteObject[] = [
+  { path: '/login', element: <LoginPage /> },
+  { path: '/register', element: <RegisterPage /> },
+];
 
 const routes: RouteObject[] = [
   { path: '/', element: <OverviewPage /> },
@@ -28,8 +32,6 @@ const routes: RouteObject[] = [
   { path: '/setup', element: <SetupPage /> },
   { path: '/account', element: <AccountPage /> },
 ];
-
-const queryClient = new QueryClient();
 
 function App() {
   return (
