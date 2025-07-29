@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate, useParams } from 'react-router';
 import { z } from 'zod';
+import { useResetPasswordMutation } from '@/api/mutations';
 import { LoadingButton } from '@/components/LoadingButton';
 import { PasswordInput } from '@/components/PasswordInput';
 import { Card, CardContent } from '@/components/ui/card';
@@ -29,6 +30,7 @@ type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
 
 export default function ResetPassword() {
   const { userId } = useParams<{ userId: string }>();
+  const { mutateAsync } = useResetPasswordMutation();
   const navigate = useNavigate();
 
   const form = useForm<ResetPasswordFormValues>({
@@ -49,10 +51,11 @@ export default function ResetPassword() {
     }
 
     try {
-      //   await mutateAsync({
-      //     userId,
-      //     password: values.password,
-      //   });
+      await mutateAsync({
+        userId,
+        newPassword: values.password,
+        confirmPassword: values.confirmPassword,
+      });
       navigate('/login', {
         state: {
           message:
