@@ -53,6 +53,15 @@ export function useLoginMutation() {
   });
 }
 
+// {{url}}/admin/forgetPassword
+export function useForgotPasswordMutation() {
+  return useMutation({
+    mutationKey: ['forgotPassword'],
+    mutationFn: (data: { email: string }) =>
+      axiosClient.post('/admin/forgetPassword', data),
+  });
+}
+
 export function useAddAtmMutation() {
   return useMutation({
     mutationKey: ['addAtm'],
