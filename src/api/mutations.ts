@@ -147,3 +147,16 @@ export const useCreateOrUpdatePageMutation = () => {
     },
   });
 };
+
+// {{url}}/static/addContactDetails
+export const useCreateOrUpdateContactMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: FormData) =>
+      axiosClient.post('/static/addContactDetails', data),
+    mutationKey: ['createOrUpdateContact'],
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['contactDetails'] });
+    },
+  });
+};
