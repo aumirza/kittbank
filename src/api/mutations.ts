@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { axiosClient } from '@/lib/axios';
 import { useAuthStore } from '@/stores/authStore';
@@ -125,6 +125,8 @@ export const useCreateOrUpdatePageMutation = () => {
       switch (type) {
         case 'about':
           return axiosClient.post('/static/createAboutus', data);
+        case 'privacy':
+          return axiosClient.post('/static/createPrivacy', data);
         default:
           throw new Error('Invalid type');
       }
@@ -132,6 +134,7 @@ export const useCreateOrUpdatePageMutation = () => {
     mutationKey: ['createOrUpdatePage'],
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['aboutUs'] });
+      queryClient.invalidateQueries({ queryKey: ['privacy'] });
     },
   });
 };
