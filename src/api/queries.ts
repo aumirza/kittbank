@@ -193,3 +193,14 @@ export const useGetAllCurrenciesQuery = () => {
     refetchOnWindowFocus: false,
   });
 };
+
+// {{url}}/static/getAboutUs
+export const useGetAboutUsQuery = (enabled: boolean) => {
+  return useQuery({
+    queryKey: ['aboutUs'],
+    enabled,
+    queryFn: () =>
+      axiosClient.get<IResponse<IStaticPageData>>('/static/getAboutUs'),
+    select: (data) => data.data,
+  });
+};
