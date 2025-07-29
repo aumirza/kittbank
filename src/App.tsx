@@ -19,11 +19,13 @@ const SetupPage = lazy(() => import('./pages/Setup'));
 const AccountPage = lazy(() => import('./pages/Account'));
 
 const ForgotPasswordPage = lazy(() => import('./pages/ForgotPassword'));
+const ResetPasswordPage = lazy(() => import('./pages/ResetPassword'));
 
 const authRoutes: RouteObject[] = [
   { path: '/login', element: <LoginPage /> },
   { path: '/register', element: <RegisterPage /> },
   { path: '/forgot-password', element: <ForgotPasswordPage /> },
+  { path: '/reset-password/:userId', element: <ResetPasswordPage /> },
 ];
 
 const routes: RouteObject[] = [
