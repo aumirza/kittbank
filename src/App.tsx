@@ -9,6 +9,9 @@ import { queryClient } from './lib/queryclient';
 
 const LoginPage = lazy(() => import('./pages/Login'));
 const RegisterPage = lazy(() => import('./pages/Register'));
+const ForgotPasswordPage = lazy(() => import('./pages/ForgotPassword'));
+const ResetPasswordPage = lazy(() => import('./pages/ResetPassword'));
+
 const OverviewPage = lazy(() => import('./pages/Overview'));
 const TicketsPage = lazy(() => import('./pages/Tickets'));
 const NotFoundPage = lazy(() => import('./pages/NotFound'));
@@ -17,9 +20,7 @@ const UsersPage = lazy(() => import('./pages/Users'));
 const AnalyticsPage = lazy(() => import('./pages/Analytics'));
 const SetupPage = lazy(() => import('./pages/Setup'));
 const AccountPage = lazy(() => import('./pages/Account'));
-
-const ForgotPasswordPage = lazy(() => import('./pages/ForgotPassword'));
-const ResetPasswordPage = lazy(() => import('./pages/ResetPassword'));
+const SettingsPage = lazy(() => import('./pages/Settings'));
 
 const authRoutes: RouteObject[] = [
   { path: '/login', element: <LoginPage /> },
@@ -36,6 +37,7 @@ const routes: RouteObject[] = [
   { path: '/analytics', element: <AnalyticsPage /> },
   { path: '/setup', element: <SetupPage /> },
   { path: '/account', element: <AccountPage /> },
+  { path: '/settings', element: <SettingsPage /> },
 ];
 
 function App() {

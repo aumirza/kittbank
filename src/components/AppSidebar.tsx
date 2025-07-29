@@ -59,11 +59,15 @@ export function AppSidebar() {
             </NavLink>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <NavSidebarMenuButton
-              icon={SettingsIcon}
-              isActive={false}
-              title="Settings"
-            />
+            <NavLink className="flex w-full" end to="/settings">
+              {({ isActive }) => (
+                <NavSidebarMenuButton
+                  icon={SettingsIcon}
+                  isActive={isActive}
+                  title="Settings"
+                />
+              )}
+            </NavLink>
           </SidebarMenuItem>
           <SidebarMenuItem>
             <LogoutButton />
