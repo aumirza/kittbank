@@ -44,9 +44,18 @@ export function RegisterForm() {
     },
   });
 
-  // biome-ignore lint/suspicious/useAwait: <explanation>
-  const onSubmit = async (_values: RegisterFormValues) => {
+  const { mutateAsync } = useRegisterMutation();
+
+  const onSubmit = async (values: RegisterFormValues) => {
     try {
+      await mutateAsync({
+        fullName: `${values.firstName} ${values.lastName}`.trim(),
+        firstName: values.firstName,
+        lastName: values.lastName,
+        mobileNumber: values.phone,
+        email: values.email,
+        password: values.password,
+      });
       toast.success('Registration successful');
       navigate('/');
     } catch (error) {

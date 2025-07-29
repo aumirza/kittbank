@@ -6,6 +6,34 @@ import type { IATM } from '@/types/atm';
 import type { ICurrency } from '@/types/currency';
 import type { IUser } from '@/types/user';
 
+// /{{url}}/admin/registration
+export function useRegisterMutation() {
+  const login = useAuthStore((state) => state.login);
+  return useMutation({
+    mutationKey: ['register'],
+    mutationFn: async (data: {
+      fullName: string;
+      firstName: string;
+      lastName: string;
+      mobileNumber: string;
+      email: string;
+      password: string;
+    }) => {
+      try {
+        const response = await axiosClient.post('/admin/registration', data);
+        login(response.data.accessToken, response.data.data);
+        return response;
+      } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+          throw new Error(
+            error.response?.data?.message || 'Registration failed'
+          );
+        }
+      }
+    },
+  });
+}
+
 export function useLoginMutation() {
   const login = useAuthStore((state) => state.login);
   return useMutation({
