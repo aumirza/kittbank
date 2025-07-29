@@ -1,7 +1,13 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { useCreateOrUpdatePageMutation } from '@/api/mutations';
-import { useGetAboutUsQuery, useGetPrivacyQuery } from '@/api/queries';
+import {
+  useGetAboutUsQuery,
+  useGetCookiesPolicyQuery,
+  useGetPrivacyQuery,
+  useGetReturnRefundPolicyQuery,
+  useGetTermsQuery,
+} from '@/api/queries';
 import { PageLayout } from '@/components/PageLayout';
 import { PageForm } from '@/components/settings/PageForm';
 import { Separator } from '@/components/ui/separator';
@@ -10,17 +16,30 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 const tabs = [
   { label: 'About us', value: 'about' },
   { label: 'Privacy Policy', value: 'privacy' },
+  { label: 'Return & Refund Policy', value: 'returnRefund' },
+  { label: 'Cookies Policy', value: 'cookies' },
+  { label: 'Terms & Conditions', value: 'terms' },
 ];
 
 export default function Settings() {
   const [tabValue, setTabValue] = useState('about');
   const { data: AboutData } = useGetAboutUsQuery(tabValue === 'about');
   const { data: PrivacyData } = useGetPrivacyQuery(tabValue === 'privacy');
+  const { data: ReturnRefundData } = useGetReturnRefundPolicyQuery(
+    tabValue === 'returnRefund'
+  );
+  const { data: CookiesData } = useGetCookiesPolicyQuery(
+    tabValue === 'cookies'
+  );
+  const { data: TermsData } = useGetTermsQuery(tabValue === 'terms');
   const { mutateAsync } = useCreateOrUpdatePageMutation();
 
   const dataMap = {
-    about: AboutData,
-    privacy: PrivacyData,
+    about: tabValue === 'about' ? AboutData : null,
+    privacy: tabValue === 'privacy' ? PrivacyData : null,
+    returnRefund: tabValue === 'returnRefund' ? ReturnRefundData : null,
+    cookies: tabValue === 'cookies' ? CookiesData : null,
+    terms: tabValue === 'terms' ? TermsData : null,
   };
 
   const handleFormSubmit = async (_values: {
