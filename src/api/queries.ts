@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { axiosClient } from '@/lib/axios';
 import type { IATM } from '@/types/atm';
 import type { ICurrency } from '@/types/currency';
-import type { IStaticPageData } from '@/types/page';
+import type { IContactPageData, IStaticPageData } from '@/types/page';
 import type {
   IFinancialSnapshot,
   IPaginatedResponse,
@@ -248,6 +248,19 @@ export const useGetTermsQuery = (enabled: boolean) => {
     enabled,
     queryFn: () =>
       axiosClient.get<IResponse<IStaticPageData>>('/static/getTerms'),
+    select: (data) => data.data,
+  });
+};
+
+// {{url}}/static/viewContactDetails
+export const useGetContactDetailsQuery = (enabled: boolean) => {
+  return useQuery({
+    queryKey: ['contactDetails'],
+    enabled,
+    queryFn: () =>
+      axiosClient.get<IResponse<IContactPageData>>(
+        '/static/viewContactDetails'
+      ),
     select: (data) => data.data,
   });
 };
