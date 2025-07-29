@@ -216,3 +216,38 @@ export const useGetPrivacyQuery = (enabled: boolean) => {
     select: (data) => data.data,
   });
 };
+
+// {{url}}/static/getReturnRefundPolicy
+export const useGetReturnRefundPolicyQuery = (enabled: boolean) => {
+  return useQuery({
+    queryKey: ['returnRefundPolicy'],
+    enabled,
+    queryFn: () =>
+      axiosClient.get<IResponse<IStaticPageData>>(
+        '/static/getReturnRefundPolicy'
+      ),
+    select: (data) => data.data,
+  });
+};
+
+// {{url}}/static/getCookiesPolicy
+export const useGetCookiesPolicyQuery = (enabled: boolean) => {
+  return useQuery({
+    queryKey: ['cookiesPolicy'],
+    enabled,
+    queryFn: () =>
+      axiosClient.get<IResponse<IStaticPageData>>('/static/getCookiesPolicy'),
+    select: (data) => data.data,
+  });
+};
+
+// {{url}}/static/getTerms
+export const useGetTermsQuery = (enabled: boolean) => {
+  return useQuery({
+    queryKey: ['terms'],
+    enabled,
+    queryFn: () =>
+      axiosClient.get<IResponse<IStaticPageData>>('/static/getTerms'),
+    select: (data) => data.data,
+  });
+};
