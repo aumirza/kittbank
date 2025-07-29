@@ -5,6 +5,7 @@ import { AuthLayout } from './components/AuthLayout';
 import { AuthWrapper } from './components/AuthWrapper';
 import DashboardLayout from './components/DashboardLayout';
 import { LoadingScreen } from './components/LoadingScreen';
+import { queryClient } from './lib/queryclient';
 
 const LoginPage = lazy(() => import('./pages/Login'));
 const OverviewPage = lazy(() => import('./pages/Overview'));
