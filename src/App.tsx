@@ -3,7 +3,7 @@ import { lazy, Suspense } from 'react';
 import { Route, type RouteObject, Routes } from 'react-router';
 import { AuthLayout } from './components/AuthLayout';
 import { AuthWrapper } from './components/AuthWrapper';
-import DashboardLayout from './components/DashboardLayout';
+import { DashboardLayout } from './components/DashboardLayout';
 import { LoadingScreen } from './components/LoadingScreen';
 import { queryClient } from './lib/queryclient';
 

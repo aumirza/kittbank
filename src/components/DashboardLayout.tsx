@@ -5,7 +5,7 @@ import { AppSidebar } from './AppSidebar';
 import DashboardHeader from './DashboardHeader';
 import { Toaster } from './ui/sonner';
 
-export default function DashboardLayout() {
+export function DashboardLayout() {
   return (
     <div className="bg-accent">
       <SidebarProvider
