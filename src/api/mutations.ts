@@ -71,6 +71,18 @@ export function useForgotVerifyOtpMutation() {
   });
 }
 
+// {{url}}/admin/changePassword/{{id}}{
+export function useResetPasswordMutation() {
+  return useMutation({
+    mutationKey: ['resetPassword'],
+    mutationFn: async (data: {
+      userId: string;
+      newPassword: string;
+      confirmPassword: string;
+    }) => axiosClient.post(`/admin/changePassword/${data.userId}`, data),
+  });
+}
+
 export function useAddAtmMutation() {
   return useMutation({
     mutationKey: ['addAtm'],
