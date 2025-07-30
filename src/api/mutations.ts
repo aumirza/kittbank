@@ -4,6 +4,7 @@ import { axiosClient } from '@/lib/axios';
 import { useAuthStore } from '@/stores/authStore';
 import type { IATM } from '@/types/atm';
 import type { ICurrency } from '@/types/currency';
+import type { IFaqItem } from '@/types/page';
 import type { IUser } from '@/types/user';
 
 // /{{url}}/admin/registration
@@ -157,6 +158,31 @@ export const useCreateOrUpdateContactMutation = () => {
     mutationKey: ['createOrUpdateContact'],
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['contactDetails'] });
+    },
+  });
+};
+// {{url}}/static/faq/createFaq
+export const useCreateFaqMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: { answer: string; question: string }) =>
+      axiosClient.post('/static/faq/createFaq', data),
+    mutationKey: ['createFaq'],
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['faqs'] });
+    },
+  });
+};
+
+// {{url}}/static/faq/{{id}}
+export const useUpdateFaqMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Partial<IFaqItem> }) =>
+      axiosClient.put(`/static/faq/${id}`, data),
+    mutationKey: ['updateFaq'],
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['faqs'] });
     },
   });
 };
