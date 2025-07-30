@@ -84,10 +84,10 @@ export function PageForm({ onSubmit, defaultValues }: PageFormProps) {
   return (
     <Form {...form}>
       <form
-        className="mt-8 space-y-6"
+        className="mt-5 space-y-6"
         onSubmit={form.handleSubmit(handleSubmit)}
       >
-        <div className="rounded-xl border border-border bg-card p-6">
+        <div className="">
           <div className="space-y-6">
             <FormField
               control={form.control}
