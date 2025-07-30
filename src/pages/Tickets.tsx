@@ -1,33 +1,58 @@
 import { useMemo, useState } from 'react';
+import { useTicketMessagesQuery, useTicketsQuery } from '@/api/tickets';
+import { Loader } from '@/components/Loader';
 import { PageLayout } from '@/components/PageLayout';
 import { TicketDetailView } from '@/components/tickets/TicketDetailView';
 import { TicketEmptyState } from '@/components/tickets/TicketEmptyState';
 import { TicketList } from '@/components/tickets/TicketList';
 import { TicketStatusFilter } from '@/components/tickets/TicketStatusFilter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { mockTicketMessages, mockTickets } from '@/data/tickets';
 import type { Ticket, TicketStatus } from '@/types/ticket';
 
 export default function Tickets() {
   const [selectedTicket, setSelectedTicket] = useState<Ticket | undefined>();
   const [statusFilter, setStatusFilter] = useState<TicketStatus>('open');
 
+  // Fetch tickets from Firebase
+  const { data: tickets = [], isLoading: ticketsLoading } = useTicketsQuery();
+
+  // Fetch messages for selected ticket
+  const { data: messages = [] } = useTicketMessagesQuery(selectedTicket?.id);
+
   // Calculate ticket counts for filters
   const ticketCounts = useMemo(() => {
-    const all = mockTickets.length;
-    const open = mockTickets.filter(
-      (ticket) => ticket.status === 'open'
-    ).length;
-    const closed = mockTickets.filter(
+    const all = tickets.length;
+    const open = tickets.filter((ticket) => ticket.status === 'open').length;
+    const closed = tickets.filter(
       (ticket) => ticket.status === 'closed'
     ).length;
 
     return { all, open, closed };
-  }, []);
+  }, [tickets]);
+
+  // Filter tickets based on status
+  const filteredTickets = useMemo(() => {
+    if (statusFilter === 'open' || statusFilter === 'closed') {
+      return tickets.filter((ticket) => ticket.status === statusFilter);
+    }
+    return tickets;
+  }, [tickets, statusFilter]);
 
   const handleTicketSelect = (ticket: Ticket) => {
     setSelectedTicket(ticket);
   };
+
+  if (ticketsLoading) {
+    return (
+      <PageLayout
+        className="flex h-[81vh] items-center justify-center"
+        description="Manage and track your support requests"
+        title="Support Tickets"
+      >
+        <Loader />
+      </PageLayout>
+    );
+  }
 
   return (
     <PageLayout
@@ -54,7 +79,7 @@ export default function Tickets() {
               filter={statusFilter}
               onTicketSelect={handleTicketSelect}
               selectedTicket={selectedTicket}
-              tickets={mockTickets}
+              tickets={filteredTickets}
             />
           </CardContent>
         </Card>
@@ -63,10 +88,7 @@ export default function Tickets() {
       {/* Right Panel - Ticket Detail */}
       <div className="flex flex-1 flex-col">
         {selectedTicket ? (
-          <TicketDetailView
-            messages={mockTicketMessages}
-            ticket={selectedTicket}
-          />
+          <TicketDetailView messages={messages} ticket={selectedTicket} />
         ) : (
           <TicketEmptyState />
         )}
