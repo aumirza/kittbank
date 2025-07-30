@@ -3,8 +3,8 @@ import type { Ticket, TicketMessage } from '@/types/ticket';
 export const mockTickets: Ticket[] = [
   {
     id: 'RT3355894545',
-    title: 'Account Configuration Transaction Limit',
-    category: 'Account Configuration',
+    title: 'Account Configuration',
+    category: 'Transaction Limit',
     status: 'open',
     description: 'Stay on top of your finances, all in one place.',
     author: {
@@ -17,8 +17,8 @@ export const mockTickets: Ticket[] = [
   },
   {
     id: 'RT3746687238',
-    title: 'Account Configuration Transaction Limit',
-    category: 'Account Configuration',
+    title: 'Account Configuration',
+    category: 'Transaction Limit',
     status: 'open',
     description: 'Stay on top of your finances, all in one place.',
     author: {
@@ -31,8 +31,8 @@ export const mockTickets: Ticket[] = [
   },
   {
     id: 'RT3746687239',
-    title: 'Account Configuration Transaction Limit',
-    category: 'Account Configuration',
+    title: 'Account Configuration',
+    category: 'Transaction Limit',
     status: 'open',
     description: 'Stay on top of your finances, all in one place.',
     author: {
@@ -45,8 +45,8 @@ export const mockTickets: Ticket[] = [
   },
   {
     id: 'RT3746687240',
-    title: 'Account Configuration Transaction Limit',
-    category: 'Account Configuration',
+    title: 'Account Configuration',
+    category: 'Transaction Limit',
     status: 'open',
     description: 'Stay on top of your finances, all in one place.',
     author: {
@@ -59,8 +59,8 @@ export const mockTickets: Ticket[] = [
   },
   {
     id: 'RT3746687241',
-    title: 'Account Configuration Transaction Limit',
-    category: 'Account Configuration',
+    title: 'Account Configuration',
+    category: 'Transaction Limit',
     status: 'open',
     description: 'Stay on top of your finances, all in one place.',
     author: {
@@ -73,8 +73,8 @@ export const mockTickets: Ticket[] = [
   },
   {
     id: 'RT3746687242',
-    title: 'Account Configuration Transaction Limit',
-    category: 'Account Configuration',
+    title: 'Account Configuration',
+    category: 'Transaction Limit',
     status: 'open',
     description: 'Stay on top of your finances, all in one place.',
     author: {
@@ -87,8 +87,8 @@ export const mockTickets: Ticket[] = [
   },
   {
     id: 'RT3746687243',
-    title: 'Account Configuration Transaction Limit',
-    category: 'Account Configuration',
+    title: 'Account Configuration',
+    category: 'Transaction Limit',
     status: 'open',
     description: 'Stay on top of your finances, all in one place.',
     author: {
@@ -134,5 +134,27 @@ export const mockTicketMessages: TicketMessage[] = [
     message:
       'Dear Sir / Madam, Why our settlement is on hold? We have submitted action for all pending requests.',
     timestamp: new Date('2024-04-03T08:30:00Z'),
+  },
+  {
+    id: 'msg-4',
+    ticketId: 'RT3355894545',
+    author: {
+      name: 'Subham',
+      avatar: undefined,
+    },
+    message:
+      'Dear Sir / Madam, Why our settlement is on hold? We have submitted action for  all pending requests.',
+    timestamp: new Date('2024-04-03T09:15:00Z'),
+  },
+  {
+    id: 'msg-5',
+    ticketId: 'RT3355894545',
+    author: {
+      name: 'Subham',
+      avatar: undefined,
+    },
+    message:
+      'Dear Sir / Madam, Why our settlement is on hold? We have submitted action for all pending requests.',
+    timestamp: new Date('2024-04-03T10:00:00Z'),
   },
 ];

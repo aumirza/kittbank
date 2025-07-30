@@ -1,7 +1,6 @@
 export type TicketStatus = 'open' | 'closed';
 
 export type TicketCategory =
-  | 'Account Configuration'
   | 'Settlement Related'
   | 'Transaction Limit'
   | 'Technical Support'
