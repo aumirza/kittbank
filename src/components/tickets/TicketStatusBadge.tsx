@@ -13,12 +13,12 @@ export function TicketStatusBadge({
 }: TicketStatusBadgeProps) {
   return (
     <Badge
-      className={cn('rounded-full bg-transparent py-0.5 text-xs', {
-        'border border-green-500 bg-green-300': isSelected,
+      className={cn('rounded-full bg-transparent py-0 text-xs', {
+        'border border-green-400 bg-green-100': isSelected,
       })}
       variant="secondary"
     >
-      <div className="size-2 rounded-full bg-green-500" />
+      <div className="size-2 rounded-full bg-green-400" />
       {status === 'open' ? 'Active' : 'Closed'}
     </Badge>
   );

@@ -36,8 +36,8 @@ export default function Tickets() {
       title="Support Tickets"
     >
       {/* Left Panel - Ticket List */}
-      <div className="flex w-1/3 min-w-[400px] flex-col">
-        <Card className="flex h-full flex-col">
+      <div className="flex w-1/3 flex-col ">
+        <Card className="flex h-full flex-col gap-0">
           <CardHeader className="border-border border-b pb-4">
             <div className="flex items-center justify-between">
               <CardTitle>Support Request</CardTitle>

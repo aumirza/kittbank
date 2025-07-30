@@ -79,7 +79,7 @@ export default function Settings() {
       title="Settings"
     >
       {/* Sidebar */}
-      <div className="m-3 flex h-full @md:w-1/4 flex-col rounded-2xl bg-background p-6 shadow-md lg:w-1/4">
+      <div className="sticky top-2 m-3 flex h-fit max-h-[85vh] @md:w-1/4 flex-col rounded-2xl bg-background p-6 shadow-md lg:w-1/4">
         <div className="mb-6 w-full text-center">
           <h2 className="font-bold text-xl">Manage security</h2>
         </div>
