@@ -8,6 +8,15 @@ export interface IStaticPageData {
   updatedAt: string;
   __v: number;
 }
+
+export interface IFaqItem {
+  _id: string;
+  question: string;
+  answer: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
 export interface IContactPageData {
   _id: string;
   image: string;
