@@ -11,6 +11,7 @@ import {
 } from '@/api/queries';
 import { PageLayout } from '@/components/PageLayout';
 import { ContactForm } from '@/components/settings/ContactForm';
+import { FaqForm } from '@/components/settings/FaqForm';
 import { PageForm } from '@/components/settings/PageForm';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -21,6 +22,7 @@ const tabs = [
   { label: 'Return & Refund Policy', value: 'returnRefund' },
   { label: 'Cookies Policy', value: 'cookies' },
   { label: 'Terms & Conditions', value: 'terms' },
+  { label: 'FAQs', value: 'faq' },
   { label: 'Contact Details', value: 'contact' },
 ];
 
@@ -46,6 +48,7 @@ export default function Settings() {
     returnRefund: tabValue === 'returnRefund' ? ReturnRefundData : null,
     cookies: tabValue === 'cookies' ? CookiesData : null,
     terms: tabValue === 'terms' ? TermsData : null,
+    faq: null, // FAQ data is handled directly in FaqForm component
     contact: tabValue === 'contact' ? ContactData : null,
   };
 
@@ -115,13 +118,16 @@ export default function Settings() {
             </div>
             <Separator />
 
-            {tabValue === 'contact' ? (
+            {tabValue === 'contact' && (
               <ContactForm defaultValues={dataMap.contact?.data} />
-            ) : (
+            )}
+            {tabValue === 'faq' && <FaqForm />}
+            {tabValue !== 'contact' && tabValue !== 'faq' && (
               <PageForm
                 defaultValues={
-                  dataMap[tabValue as Exclude<keyof typeof dataMap, 'contact'>]
-                    ?.data
+                  dataMap[
+                    tabValue as Exclude<keyof typeof dataMap, 'contact' | 'faq'>
+                  ]?.data
                 }
                 onSubmit={handleFormSubmit}
               />
