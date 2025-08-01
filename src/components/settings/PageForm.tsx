@@ -26,10 +26,6 @@ const pageFormSchema = z.object({
     .string()
     .min(1, 'Description is required')
     .max(1000, 'Description must be less than 1000 characters'),
-  image: z
-    .instanceof(FileList)
-    .optional()
-    .or(z.string().url('Please enter a valid URL').optional()),
 });
 
 type PageFormValues = z.infer<typeof pageFormSchema>;
@@ -37,6 +33,7 @@ type PageFormValues = z.infer<typeof pageFormSchema>;
 interface PageFormProps {
   onSubmit?: (values: PageFormValues) => Promise<void> | void;
   defaultValues?: IStaticPageData;
+  showImageField?: boolean;
 }
 
 export function PageForm({ onSubmit, defaultValues }: PageFormProps) {
@@ -45,7 +42,6 @@ export function PageForm({ onSubmit, defaultValues }: PageFormProps) {
     defaultValues: {
       title: '',
       description: '',
-      image: undefined,
       ...defaultValues,
     },
   });
@@ -56,14 +52,12 @@ export function PageForm({ onSubmit, defaultValues }: PageFormProps) {
       form.reset({
         title: defaultValues.title || '',
         description: defaultValues.description || '',
-        image: defaultValues.image || undefined,
       });
     } else {
       // Reset to empty values when no data
       form.reset({
         title: '',
         description: '',
-        image: undefined,
       });
     }
   }, [defaultValues, form]);
@@ -124,23 +118,7 @@ export function PageForm({ onSubmit, defaultValues }: PageFormProps) {
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="image"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Image</FormLabel>
-                  <FormControl>
-                    <Input
-                      accept="image/*"
-                      onChange={(e) => field.onChange(e.target.files)}
-                      type="file"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* Image field removed */}
           </div>
         </div>
 
