@@ -5,7 +5,7 @@ import { DataTable } from '@/components/DataTable';
 import { PageLayout } from '@/components/PageLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { userColumns } from '@/components/users/UserColumns';
+import { userColumns, userFilters } from '@/components/users/UserColumns';
 
 // import { usersData } from '@/data/users';
 
@@ -96,8 +96,11 @@ export default function Users() {
       <DataTable
         columns={userColumns}
         data={data?.docs}
+        filters={userFilters}
         isLoading={isLoading}
+        showGlobalFilter
         showToolbar
+        title="Users"
       />
     </PageLayout>
   );
