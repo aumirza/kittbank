@@ -122,10 +122,14 @@ export function useDeleteCurrencyMutation() {
 export const useCreateOrUpdatePageMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ type, data }: { type: string; data: FormData }) => {
+    mutationFn: ({
+      type,
+      data,
+    }: {
+      type: string;
+      data: { title: string; description: string };
+    }) => {
       switch (type) {
-        case 'about':
-          return axiosClient.post('/static/createAboutus', data);
         case 'privacy':
           return axiosClient.post('/static/createPrivacy', data);
         case 'returnRefund':
@@ -140,7 +144,6 @@ export const useCreateOrUpdatePageMutation = () => {
     },
     mutationKey: ['createOrUpdatePage'],
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['aboutUs'] });
       queryClient.invalidateQueries({ queryKey: ['privacy'] });
       queryClient.invalidateQueries({ queryKey: ['returnRefundPolicy'] });
       queryClient.invalidateQueries({ queryKey: ['cookiesPolicy'] });
@@ -161,6 +164,19 @@ export const useCreateOrUpdateContactMutation = () => {
     },
   });
 };
+
+export const useCreateOrUpdateAboutMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: FormData) =>
+      axiosClient.post('/static/createAboutus', data),
+    mutationKey: ['createOrUpdateAbout'],
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['aboutUs'] });
+    },
+  });
+};
+
 // {{url}}/static/faq/createFaq
 export const useCreateFaqMutation = () => {
   const queryClient = useQueryClient();
