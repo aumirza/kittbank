@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useAddCurrencyMutation } from '@/api/mutations';
@@ -62,6 +62,11 @@ export function AddCurrencyDialog({
       autoUpdate: currency?.autoUpdate ?? true,
     },
   });
+
+  // Synchronize dialogOpen with open prop
+  useEffect(() => {
+    setIsOpen(open);
+  }, [open]);
 
   const onSubmit = async (data: CurrencyFormData) => {
     try {

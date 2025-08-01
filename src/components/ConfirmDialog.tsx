@@ -1,4 +1,4 @@
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -56,6 +56,11 @@ export function ConfirmDialog({
   onOpenChange,
 }: ConfirmDialogProps) {
   const [dialogOpen, setDialogOpen] = useState(open);
+  // Synchronize dialogOpen with open prop
+  useEffect(() => {
+    setDialogOpen(open);
+  }, [open]);
+
   const handleChange = (isOpen: boolean) => {
     setDialogOpen(isOpen);
     onOpenChange?.(isOpen);
