@@ -29,6 +29,7 @@ interface DataTableToolbarProps<TData> {
     id: string;
     title: string;
   }[];
+  toolbarActions?: React.ReactNode;
 }
 
 export function DataTableToolbar<TData>({
@@ -36,6 +37,7 @@ export function DataTableToolbar<TData>({
   filters,
   showGlobalFilter = true,
   searchableColumns = [],
+  toolbarActions,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
 
@@ -214,6 +216,9 @@ export function DataTableToolbar<TData>({
 
         {/* Export Button */}
         <DataTableExportButton table={table} />
+
+        {/* Custom Toolbar Actions */}
+        {toolbarActions && toolbarActions}
       </div>
     </div>
   );

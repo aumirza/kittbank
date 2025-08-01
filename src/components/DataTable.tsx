@@ -42,16 +42,19 @@ interface DataTableProps<TData, TValue> {
   showPagination?: boolean;
   showGlobalFilter?: boolean;
   title?: string;
+  toolbarActions?: React.ReactNode;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   isLoading = false,
+  filters = [],
   showToolbar = false,
   showPagination = true,
   showGlobalFilter = true,
   title,
+  toolbarActions,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -151,6 +154,7 @@ export function DataTable<TData, TValue>({
               }))}
               showGlobalFilter={showGlobalFilter}
               table={table}
+              toolbarActions={toolbarActions}
             />
           </CardContent>
         </Card>
