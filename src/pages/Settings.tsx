@@ -10,6 +10,7 @@ import {
   useGetTermsQuery,
 } from '@/api/queries';
 import { PageLayout } from '@/components/PageLayout';
+import { AboutForm } from '@/components/settings/AboutForm';
 import { ContactForm } from '@/components/settings/ContactForm';
 import { FaqForm } from '@/components/settings/FaqForm';
 import { PageForm } from '@/components/settings/PageForm';
@@ -52,21 +53,12 @@ export default function Settings() {
     contact: tabValue === 'contact' ? ContactData : null,
   };
 
-  const handleFormSubmit = async (_values: {
+  const handleFormSubmit = async (values: {
     title: string;
     description: string;
-    image?: FileList | string;
   }) => {
-    const formData = new FormData();
-    formData.append('title', _values.title);
-    formData.append('description', _values.description);
-    if (_values?.image?.[0]) {
-      formData.append('image', _values.image[0]);
-    } else {
-      formData.append('image', '');
-    }
     try {
-      await mutateAsync({ type: tabValue, data: formData });
+      await mutateAsync({ type: tabValue, data: values });
       toast.success('Settings saved successfully!');
     } catch {
       toast.error('Failed to save settings. Please try again.');
@@ -121,17 +113,25 @@ export default function Settings() {
             {tabValue === 'contact' && (
               <ContactForm defaultValues={dataMap.contact?.data} />
             )}
-            {tabValue === 'faq' && <FaqForm />}
-            {tabValue !== 'contact' && tabValue !== 'faq' && (
-              <PageForm
-                defaultValues={
-                  dataMap[
-                    tabValue as Exclude<keyof typeof dataMap, 'contact' | 'faq'>
-                  ]?.data
-                }
-                onSubmit={handleFormSubmit}
-              />
+            {tabValue === 'about' && (
+              <AboutForm defaultValues={dataMap.about?.data} />
             )}
+            {tabValue === 'faq' && <FaqForm />}
+            {tabValue !== 'contact' &&
+              tabValue !== 'faq' &&
+              tabValue !== 'about' && (
+                <PageForm
+                  defaultValues={
+                    dataMap[
+                      tabValue as Exclude<
+                        keyof typeof dataMap,
+                        'contact' | 'faq' | 'about'
+                      >
+                    ]?.data
+                  }
+                  onSubmit={handleFormSubmit}
+                />
+              )}
           </TabsContent>
         </Tabs>
       </div>
