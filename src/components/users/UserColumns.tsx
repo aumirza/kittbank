@@ -1,7 +1,7 @@
 'use client';
 
 import type { ColumnDef } from '@tanstack/react-table';
-import { MoreHorizontal } from 'lucide-react';
+import { MoreHorizontalIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -12,9 +12,11 @@ import {
 import type { IUserListItem } from '@/types/user';
 import { DataTableColumnHeader } from '../DataTableColumnHeader';
 
-export const userColumns: ColumnDef<IUserListItem>[] = [
+export const userColumns: (ColumnDef<IUserListItem> & {
+  isSearchable?: boolean;
+})[] = [
   {
-    accessorKey: 'id',
+    accessorKey: '_id',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="User ID" />
     ),
@@ -24,6 +26,7 @@ export const userColumns: ColumnDef<IUserListItem>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Name" />
     ),
+    isSearchable: true,
   },
   {
     accessorKey: 'totalTransaction',
@@ -42,10 +45,10 @@ export const userColumns: ColumnDef<IUserListItem>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Amount" />
     ),
-    cell: ({ row }) => {
-      const amount = Number.parseFloat(row.getValue('amount'));
-      return <div className="font-medium">{amount}</div>;
-    },
+    // cell: ({ row }) => {
+    //   const amount = Number.parseFloat(row.getValue('amount'));
+    //   return <div className="font-medium">{amount}</div>;
+    // },
   },
   {
     accessorKey: 'currency',
@@ -54,7 +57,7 @@ export const userColumns: ColumnDef<IUserListItem>[] = [
     ),
   },
   {
-    accessorKey: 'platform',
+    accessorKey: 'platForm',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Platform" />
     ),
@@ -68,7 +71,7 @@ export const userColumns: ColumnDef<IUserListItem>[] = [
           <DropdownMenuTrigger asChild>
             <Button className="h-8 w-8 p-0" variant="ghost">
               <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
+              <MoreHorizontalIcon className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">

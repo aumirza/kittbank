@@ -1,19 +1,26 @@
 export interface IUserListItem {
-  id: string;
-  fullName: string;
+  _id: string;
+  currency: string;
+  platForm: string;
+  lockCard: boolean;
+  permissions: string[];
+  password?: string;
+  __v?: number;
   firstName: string;
   lastName: string;
+  fullName: string;
   mobileNumber: string;
   email: string;
+  accountVerification: boolean;
+  isRegistration: boolean;
+  image?: string;
+  joinUser?: string[];
+  likeByUser?: string[];
   userType: 'ADMIN' | 'USER';
   userStatus: 'Active' | 'Inactive';
   wallet: number;
   rating: number;
   totalTransaction: number;
-  createdAt: string;
-  updatedAt: string;
-  accountVerification: boolean;
-  isRegistration: boolean;
   securityPrivacy: boolean;
   moveMoney: boolean;
   unlockTheApp: boolean;
@@ -21,9 +28,8 @@ export interface IUserListItem {
   callNotification: boolean;
   mailNotification: boolean;
   cashTermNotification: boolean;
-  image?: string;
-  joinUser?: string[];
-  likeByUser?: string[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface IUser {
