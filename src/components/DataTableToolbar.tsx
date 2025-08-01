@@ -19,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { DataTableExportButton } from './DataTableExportButton';
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -138,10 +139,7 @@ export function DataTableToolbar<TData>({
           </Select>
         </div>
         {/* Export Button */}
-        <Button className="h-12 rounded-full" size="sm" variant="outline">
-          <Download className="mr-2 h-4 w-4" />
-          Export
-        </Button>
+        <DataTableExportButton table={table} />
       </div>
     </div>
   );
