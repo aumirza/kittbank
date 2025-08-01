@@ -12,7 +12,7 @@ import {
   useReactTable,
   type VisibilityState,
 } from '@tanstack/react-table';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Table,
   TableBody,
@@ -21,12 +21,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import type { FilterConfig } from '@/types/filter';
 import { DataTablePagination } from './DataTablePagination';
 import { DataTableToolbar } from './DataTableToolbar';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
 interface DataTableProps<TData, TValue> {
   columns: (ColumnDef<TData, TValue> & {
+    label: string;
     isSearchable?: boolean;
   })[];
   data?: TData[];
@@ -35,8 +37,10 @@ interface DataTableProps<TData, TValue> {
     id: string;
     title: string;
   }[];
+  filters?: FilterConfig<TData>[];
   showToolbar?: boolean;
   showPagination?: boolean;
+  showGlobalFilter?: boolean;
   title?: string;
 }
 
@@ -46,6 +50,7 @@ export function DataTable<TData, TValue>({
   isLoading = false,
   showToolbar = false,
   showPagination = true,
+  showGlobalFilter = true,
   title,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -125,18 +130,26 @@ export function DataTable<TData, TValue>({
     ));
   }
 
+  const searchableColumns = useMemo(
+    () => columns.filter((col) => col.isSearchable),
+    [columns]
+  );
+
   return (
     <div className="space-y-4">
       {showToolbar && (
         <Card>
           <CardContent>
             <DataTableToolbar
-              searchableColumns={columns
-                .filter((col) => col.isSearchable)
-                .map((col) => ({
-                  id: col.accessorKey,
-                  title: 'Name',
-                }))}
+              filters={filters}
+              searchableColumns={searchableColumns.map((col) => ({
+                id:
+                  'accessorKey' in col
+                    ? col.accessorKey.toString() || ''
+                    : col.id || '',
+                title: col.label,
+              }))}
+              showGlobalFilter={showGlobalFilter}
               table={table}
             />
           </CardContent>
