@@ -26,7 +26,9 @@ import { DataTableToolbar } from './DataTableToolbar';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+  columns: (ColumnDef<TData, TValue> & {
+    isSearchable?: boolean;
+  })[];
   data?: TData[];
   isLoading?: boolean;
   searchableColumns?: {
@@ -42,7 +44,6 @@ export function DataTable<TData, TValue>({
   columns,
   data,
   isLoading = false,
-  // searchableColumns,
   showToolbar = false,
   showPagination = true,
   title,
@@ -129,7 +130,15 @@ export function DataTable<TData, TValue>({
       {showToolbar && (
         <Card>
           <CardContent>
-            <DataTableToolbar table={table} />
+            <DataTableToolbar
+              searchableColumns={columns
+                .filter((col) => col.isSearchable)
+                .map((col) => ({
+                  id: col.accessorKey,
+                  title: 'Name',
+                }))}
+              table={table}
+            />
           </CardContent>
         </Card>
       )}

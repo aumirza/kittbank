@@ -1,5 +1,5 @@
 import type { Column } from '@tanstack/react-table';
-import { ArrowDownIcon, ArrowUpDown, ArrowUpIcon } from 'lucide-react';
+import { ArrowDownIcon, ArrowUpDownIcon, ArrowUpIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface DataTableColumnHeaderProps<TData, TValue> {
@@ -22,7 +22,7 @@ export function DataTableColumnHeader<TData, TValue>({
       case 'desc':
         return <ArrowDownIcon className="ml-2 h-4 w-4" />;
       default:
-        return <ArrowUpDown className="ml-2 h-4 w-4" />;
+        return <ArrowUpDownIcon className="ml-2 h-4 w-4" />;
     }
   };
 
