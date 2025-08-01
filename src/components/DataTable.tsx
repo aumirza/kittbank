@@ -28,7 +28,7 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
 interface DataTableProps<TData, TValue> {
   columns: (ColumnDef<TData, TValue> & {
-    label: string;
+    label?: string;
     isSearchable?: boolean;
   })[];
   data?: TData[];
@@ -150,7 +150,11 @@ export function DataTable<TData, TValue>({
                   'accessorKey' in col
                     ? col.accessorKey.toString() || ''
                     : col.id || '',
-                title: col.label,
+                title:
+                  col.label ||
+                  ('accessorKey' in col
+                    ? col.accessorKey.toString() || ''
+                    : col.id || ''),
               }))}
               showGlobalFilter={showGlobalFilter}
               table={table}

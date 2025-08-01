@@ -107,7 +107,7 @@ export const userFilters: FilterConfig<IUserListItem>[] = [
   },
   {
     label: 'Amount',
-    columnKey: 'Amount',
+    columnKey: 'totalTransaction',
     type: 'select',
     options: [
       { label: '$0 - $100', value: '0-100' },
