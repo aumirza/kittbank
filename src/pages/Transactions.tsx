@@ -10,7 +10,10 @@ import {
 } from '@/api/queries';
 import { DataTable } from '@/components/DataTable';
 import { PageLayout } from '@/components/PageLayout';
-import { transactionColumns } from '@/components/transactions/TransactionColumns';
+import {
+  transactionColumns,
+  transactionFilters,
+} from '@/components/transactions/TransactionColumns';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -170,6 +173,7 @@ export default function Transactions() {
       <DataTable
         columns={transactionColumns}
         data={data?.docs}
+        filters={transactionFilters}
         isLoading={isLoading}
         showPagination={true}
         showToolbar={true}
