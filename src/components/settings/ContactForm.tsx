@@ -17,12 +17,10 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import type { IContactPageData } from '@/types/page';
+import { ImageInput } from '../ui/image-input';
 
 const contactFormSchema = z.object({
-  image: z
-    .instanceof(FileList)
-    .or(z.url('Please enter a valid URL'))
-    .optional(),
+  image: z.instanceof(File).or(z.url('Please enter a valid URL')).optional(),
   name: z
     .string()
     .min(1, 'Name is required')
@@ -151,16 +149,11 @@ export function ContactForm({ defaultValues }: ContactFormProps) {
               <FormField
                 control={form.control}
                 name="image"
-                render={({ field: { value: _value, onChange, ref } }) => (
+                render={({ field }) => (
                   <FormItem>
                     <FormLabel>Image</FormLabel>
                     <FormControl>
-                      <Input
-                        accept="image/*"
-                        onChange={(e) => onChange(e.target.files)}
-                        ref={ref}
-                        type="file"
-                      />
+                      <ImageInput multiple={false} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
