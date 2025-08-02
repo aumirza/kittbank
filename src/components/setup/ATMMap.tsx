@@ -16,6 +16,7 @@ import { AddATMDialog } from './AddATMDialog';
 
 const ATMLocatorMap = lazy(() => import('./ATMLocatorMap'));
 
+import { useGetAllAtmsQuery } from '@/api/queries';
 import { ATMMapLegend } from './ATMMapLegend';
 import { ListMapSwitcher } from './ListMapSwitcher';
 
@@ -25,6 +26,28 @@ export function ATMMap() {
   );
   const [searchValue, setSearchValue] =
     useState<SearchBoxFeatureProperties | null>(null);
+  const { data: atmData, isLoading } = useGetAllAtmsQuery();
+
+  // Prepare ATM and branch markers from fetched data
+  const atmMarkers = Array.isArray(atmData?.docs)
+    ? atmData.docs
+        .filter((atm) => atm.machine === 'ATM')
+        .map((atm) => ({
+          lat: atm.location.coordinates[0],
+          lng: atm.location.coordinates[1],
+          id: atm._id,
+        }))
+    : [];
+
+  const branchMarkers = Array.isArray(atmData?.docs)
+    ? atmData.docs
+        .filter((atm) => atm.machine !== 'ATM')
+        .map((branch) => ({
+          lat: branch.location.coordinates[0],
+          lng: branch.location.coordinates[1],
+          id: branch._id,
+        }))
+    : [];
 
   return (
     <div className="h-full min-h-0 space-y-5">
@@ -32,7 +55,6 @@ export function ATMMap() {
         <CardContent>
           <div className="flex items-center gap-2 ">
             {/* Search Input */}
-
             <MapSearchInput
               onChange={setSearchValue}
               render={(inputProps) => (
@@ -46,7 +68,6 @@ export function ATMMap() {
                 </div>
               )}
             />
-
             <div className="grid flex-1 grid-cols-4 gap-2">
               {/* Export Button */}
               <Button className="h-12 rounded-full" size="sm" variant="outline">
@@ -80,21 +101,32 @@ export function ATMMap() {
       </Card>
       <div className="relative h-[29rem] w-full flex-1 rounded-md border bg-gray-200 shadow-lg">
         {/* Controlled Legend Card */}
-        <Suspense
-          fallback={
-            <div className="flex h-full w-full items-center justify-center">
-              <Loader size="lg" />
+        {isLoading ? (
+          <div className="flex h-full w-full items-center justify-center">
+            <Loader size="lg" />
+          </div>
+        ) : (
+          <Suspense
+            fallback={
+              <div className="flex h-full w-full items-center justify-center">
+                <Loader size="lg" />
+              </div>
+            }
+          >
+            <div className="absolute top-4 left-4 z-10">
+              <ATMMapLegend onChange={setLegendValue} value={legendValue} />
             </div>
-          }
-        >
-          <div className="absolute top-4 left-4 z-10">
-            <ATMMapLegend onChange={setLegendValue} value={legendValue} />
-          </div>
-          <ATMLocatorMap marker={legendValue} search={searchValue} />
-          <div className="absolute top-4 right-4">
-            <ListMapSwitcher />
-          </div>
-        </Suspense>
+            <ATMLocatorMap
+              atmMarkers={atmMarkers}
+              branchMarkers={branchMarkers}
+              marker={legendValue}
+              search={searchValue}
+            />
+            <div className="absolute top-4 right-4">
+              <ListMapSwitcher />
+            </div>
+          </Suspense>
+        )}
       </div>
     </div>
   );
