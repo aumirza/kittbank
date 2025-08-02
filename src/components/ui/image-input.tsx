@@ -100,16 +100,16 @@ export function ImageInput({
       // Check if file is an image
       const isImage = file.type.startsWith('image/');
       if (!isImage) {
-        console.error(`File ${file.name} is not an image`);
+        // console.error(`File ${file.name} is not an image`);
         return false;
       }
 
       // Check file size (convert MB to bytes)
       const isValidSize = file.size <= maxSize * 1024 * 1024;
       if (!isValidSize) {
-        console.error(
-          `File ${file.name} exceeds the maximum size of ${maxSize}MB`
-        );
+        // console.error(
+        //   `File ${file.name} exceeds the maximum size of ${maxSize}MB`
+        // );
         return false;
       }
 
