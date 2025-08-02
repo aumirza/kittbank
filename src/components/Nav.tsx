@@ -1,10 +1,10 @@
 import {
-  ArrowUpDown,
+  ArrowUpDownIcon,
   BarChartIcon,
-  CreditCard,
+  CreditCardIcon,
   LayoutDashboardIcon,
-  Settings,
-  User,
+  Settings2Icon,
+  UserIcon,
 } from 'lucide-react';
 import { forwardRef } from 'react';
 import { NavLink } from 'react-router';
@@ -67,17 +67,17 @@ const navigationItems = [
   },
   {
     title: 'Ticket',
-    icon: CreditCard,
+    icon: CreditCardIcon,
     url: '/ticket',
   },
   {
     title: 'Transactions',
-    icon: ArrowUpDown,
+    icon: ArrowUpDownIcon,
     url: '/transactions',
   },
   {
     title: 'User',
-    icon: User,
+    icon: UserIcon,
     url: '/user',
   },
   {
@@ -87,7 +87,7 @@ const navigationItems = [
   },
   {
     title: 'Setup',
-    icon: Settings,
+    icon: Settings2Icon,
     url: '/setup',
   },
 ];
