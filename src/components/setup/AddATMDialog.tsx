@@ -22,6 +22,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import type { IATM } from '@/types/atm';
 import { getErrorMessage } from '@/utils/getErrorMessage';
 import { LoadingButton } from '../LoadingButton';
 import { LocationInput } from './LocationInput';
@@ -55,9 +56,17 @@ export function AddATMDialog({ children }: { children: React.ReactNode }) {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof atmSchema>) => {
+  const onSubmit = async (values: z.infer<typeof atmSchema>) => {
     try {
-      mutateAsync(values);
+      const valuesToSubmit = {
+        ...values,
+        location: {
+          type: 'Point',
+          coordinates: [values.longitude, values.latitude],
+        },
+      } as Partial<IATM>;
+      await form.trigger();
+      await mutateAsync(valuesToSubmit);
     } catch (error) {
       form.setError('root', {
         type: 'manual',
@@ -128,10 +137,7 @@ export function AddATMDialog({ children }: { children: React.ReactNode }) {
                         >
                           <option value="">Select Machine Type</option>
                           <option value="ATM">ATM</option>
-                          <option value="Cash Recycler">Cash Recycler</option>
-                          <option value="Deposit Machine">
-                            Deposit Machine
-                          </option>
+                          <option value="Branch">Branch</option>
                         </select>
                       </FormControl>
                       <FormMessage />
