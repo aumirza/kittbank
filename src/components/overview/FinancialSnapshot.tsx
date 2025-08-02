@@ -2,8 +2,20 @@ import { InfoIcon } from 'lucide-react';
 import { useGetFinancialSnapshotQuery } from '@/api/queries';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
+function MetricSkeleton() {
+  return (
+    <div className="animate-pulse space-y-2 lg:border-r lg:pr-6">
+      <div className="flex items-center gap-2">
+        <span className="h-4 w-24 rounded bg-gray-200" />
+        <span className="h-4 w-4 rounded bg-gray-200" />
+      </div>
+      <div className="h-6 w-20 rounded bg-gray-200" />
+    </div>
+  );
+}
+
 export default function FinancialSnapshot() {
-  const { data } = useGetFinancialSnapshotQuery();
+  const { data, isLoading } = useGetFinancialSnapshotQuery();
 
   const metrics = [
     {
@@ -43,23 +55,25 @@ export default function FinancialSnapshot() {
       </CardHeader>
       <CardContent>
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-5">
-          {metrics.map((metric, index) => {
-            const isLast = index === metrics.length - 1;
-            return (
-              <div
-                className={`space-y-2${isLast ? '' : ' lg:border-r lg:pr-6'}`}
-                key={metric.title}
-              >
-                <div className="flex items-center gap-2">
-                  <span className="font-medium text-gray-600 text-sm">
-                    {metric.title}
-                  </span>
-                  <InfoIcon className="h-4 w-4" />
-                </div>
-                <div className={'font-bold text-xl'}>{metric.value}</div>
-              </div>
-            );
-          })}
+          {isLoading
+            ? metrics.map((metric) => <MetricSkeleton key={metric.title} />)
+            : metrics.map((metric, index) => {
+                const isLast = index === metrics.length - 1;
+                return (
+                  <div
+                    className={`space-y-2${isLast ? '' : ' lg:border-r lg:pr-6'}`}
+                    key={metric.title}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-gray-600 text-sm">
+                        {metric.title}
+                      </span>
+                      <InfoIcon className="h-4 w-4" />
+                    </div>
+                    <div className={'font-bold text-xl'}>{metric.value}</div>
+                  </div>
+                );
+              })}
         </div>
       </CardContent>
     </Card>

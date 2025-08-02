@@ -79,11 +79,12 @@ export function MonthlySpendingTrend() {
       </div>
       <div className="relative h-64 w-full">
         {isLoading ? (
-          <div className="absolute inset-0 flex items-center justify-center text-gray-500">
-            Loading...
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="h-full w-full animate-pulse">
+              <div className="h-48 w-full rounded bg-gray-200" />
+            </div>
           </div>
-        ) : null}
-        {data && data?.length === 0 ? (
+        ) : data && data?.length === 0 ? (
           <div className="absolute inset-0 flex items-center justify-center text-gray-500">
             No spending data available for {selectedYear}
           </div>
