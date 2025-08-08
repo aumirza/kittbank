@@ -4,6 +4,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getCountFromServer,
   getDocs,
   orderBy,
   query,
@@ -76,6 +77,27 @@ export const ticketService = {
         isActive: data.isActive ?? true,
       } as Ticket;
     });
+  },
+
+  // Get ticket counts by status using Firestore aggregation (fast, no docs transfer)
+  async getTicketCounts(): Promise<{
+    all: number;
+    open: number;
+    closed: number;
+  }> {
+    const ticketsRef = collection(db, TICKETS_COLLECTION);
+
+    const [allSnap, openSnap, closedSnap] = await Promise.all([
+      getCountFromServer(query(ticketsRef)),
+      getCountFromServer(query(ticketsRef, where('status', '==', 'open'))),
+      getCountFromServer(query(ticketsRef, where('status', '==', 'closed'))),
+    ]);
+
+    return {
+      all: allSnap.data().count,
+      open: openSnap.data().count,
+      closed: closedSnap.data().count,
+    };
   },
 
   // Create new ticket
@@ -155,6 +177,7 @@ export const useTicketsByStatusQuery = (status: TicketStatus) => {
     queryKey: ['tickets', status],
     queryFn: () => ticketService.getTicketsByStatus(status),
     staleTime: 5 * 60 * 1000, // 5 minutes
+    placeholderData: (previousData) => previousData,
   });
 };
 
@@ -169,6 +192,15 @@ export const useTicketMessagesQuery = (ticketId: string | undefined) => {
     },
     enabled: !!ticketId,
     staleTime: 1 * 60 * 1000, // 1 minute
+  });
+};
+
+// Lightweight aggregate counts for the filter tabs
+export const useTicketCountsQuery = () => {
+  return useQuery({
+    queryKey: ['ticketCounts'],
+    queryFn: ticketService.getTicketCounts,
+    staleTime: 5 * 60 * 1000,
   });
 };
 
