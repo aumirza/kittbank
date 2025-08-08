@@ -11,6 +11,10 @@ import {
 } from '@/components/ui/dropdown-menu';
 import type { FilterConfig } from '@/types/filter';
 import type { ITransaction } from '@/types/transaction';
+import {
+  filterByNumberRange,
+  filterByRelativeDate,
+} from '@/utils/tableFilters';
 import { DataTableColumnHeader } from '../DataTableColumnHeader';
 
 const formatAmount = (amount: number): string => {
@@ -68,29 +72,20 @@ export const transactionColumns: (ColumnDef<ITransaction> & {
       const amount = Number.parseFloat(row.getValue('amount'));
       return <div className="font-medium">{formatAmount(amount)}</div>;
     },
-    filterFn: (row, id, value) => {
-      const amount = Number.parseFloat(row.getValue(id));
-      if (Number.isNaN(amount)) {
-        return false;
-      }
-      // value is in form "min-max" or "min"
-      if (typeof value === 'string') {
-        const [min, max] = value.split('-').map(Number);
-        if (Number.isNaN(min)) {
-          return false;
-        } // If min is not a number, skip this row
-        if (max !== undefined && Number.isNaN(max)) {
-          return false;
-        } // If max is not a number, skip this row
-        return amount >= min && (max === undefined || amount <= max);
-      }
-      // If value is a number, compare directly
-      if (typeof value === 'number') {
-        return amount >= value;
-      }
-      // If value is not a string or number, skip this row
-      return false;
+    filterFn: filterByNumberRange,
+  },
+  {
+    label: 'Date & Time',
+    accessorKey: 'createdAt',
+    cell: ({ cell }) => {
+      const value = cell.getValue();
+      const date = value ? new Date(value as string) : null;
+      return <div>{date ? date.toLocaleString() : ''}</div>;
     },
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Date & Time" />
+    ),
+    filterFn: filterByRelativeDate,
   },
   {
     label: 'Currency',

@@ -1,4 +1,9 @@
-'use client';
+import {
+  filterByNumberRange,
+  filterByRelativeDate,
+} from '@/utils/tableFilters';
+
+('use client');
 
 import type { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontalIcon } from 'lucide-react';
@@ -25,6 +30,19 @@ export const userColumns: (ColumnDef<IUserListItem> & {
     ),
   },
   {
+    label: 'Date & Time',
+    accessorKey: 'createdAt',
+    cell: ({ cell }) => {
+      const value = cell.getValue();
+      const date = value ? new Date(value as string) : null;
+      return <div>{date ? date.toLocaleString() : ''}</div>;
+    },
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Date & Time" />
+    ),
+    filterFn: filterByRelativeDate,
+  },
+  {
     label: 'Name',
     accessorKey: 'firstName',
     header: ({ column }) => (
@@ -38,6 +56,7 @@ export const userColumns: (ColumnDef<IUserListItem> & {
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Total Transaction" />
     ),
+    filterFn: filterByNumberRange,
   },
   {
     label: 'To Pending Ticket',
