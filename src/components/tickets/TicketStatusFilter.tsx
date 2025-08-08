@@ -32,13 +32,13 @@ export function TicketStatusFilter({
         <TabsTrigger className="flex items-center gap-2" value="open">
           Open
           <Badge className="ml-1 h-5 px-1.5 text-xs" variant="secondary">
-            {counts?.open}
+            {counts?.open ?? 0}
           </Badge>
         </TabsTrigger>
         <TabsTrigger className="flex items-center gap-2" value="closed">
           Closed
           <Badge className="ml-1 h-5 px-1.5 text-xs" variant="secondary">
-            {counts?.closed}
+            {counts?.closed ?? 0}
           </Badge>
         </TabsTrigger>
       </TabsList>
