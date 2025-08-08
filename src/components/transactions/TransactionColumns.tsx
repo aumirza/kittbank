@@ -96,7 +96,7 @@ export const transactionColumns: (ColumnDef<ITransaction> & {
   },
   {
     label: 'Platform',
-    accessorKey: 'platform',
+    accessorKey: 'paymentMethod',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Platform" />
     ),
