@@ -5,6 +5,7 @@ import { useAuthStore } from '@/stores/authStore';
 import type { IATM } from '@/types/atm';
 import type { ICurrency } from '@/types/currency';
 import type { IFaqItem } from '@/types/page';
+import type { IResponse } from '@/types/response';
 import type { IUser } from '@/types/user';
 
 // /{{url}}/admin/registration
@@ -102,10 +103,17 @@ export function useAddCurrencyMutation() {
 
 // /admin/update
 export function useUpdateUserMutation() {
+  const updateUser = useAuthStore((state) => state.updateUser);
   return useMutation({
     mutationKey: ['updateUser'],
     mutationFn: (data: Partial<IUser & { phone: string }>) =>
-      axiosClient.put('/admin/update', data),
+      axiosClient.put<IResponse<IUser>>('/admin/update', data),
+    onSuccess: (response) => {
+      // Update the user in the auth store with the response data
+      if (response.data?.data) {
+        updateUser(response.data.data);
+      }
+    },
   });
 }
 
