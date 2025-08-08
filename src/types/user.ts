@@ -40,6 +40,7 @@ export interface IUser {
   mobileNumber: string;
   email: string;
   userType: 'ADMIN' | 'USER';
+  image?: string;
 }
 
 export interface IUsersDashboardResponse {

@@ -35,7 +35,7 @@ export function UserInfo() {
   return (
     <div className="mb-8 flex w-full items-center gap-3">
       <Avatar className="h-12 w-12">
-        <AvatarImage alt={`${user.fullName} avatar`} />
+        <AvatarImage alt={`${user.fullName} avatar`} src={user?.image} />
         <AvatarFallback>{initials}</AvatarFallback>
       </Avatar>
       <div className="flex-1">

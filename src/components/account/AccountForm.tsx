@@ -40,7 +40,7 @@ export function AccountForm() {
   const form = useForm<z.infer<typeof accountFormSchema>>({
     resolver: zodResolver(accountFormSchema),
     defaultValues: {
-      fullName: user ? `${user.firstName} ${user.lastName}`.trim() : '',
+      fullName: user?.fullName || '',
       email: user?.email || '',
       phone: user?.mobileNumber || '',
       role: user?.userType || 'USER',
@@ -94,7 +94,7 @@ export function AccountForm() {
         <Separator />
         <div className="flex flex-col gap-4">
           <Avatar className="h-16 w-16">
-            <AvatarImage />
+            <AvatarImage alt={user?.fullName} src={user?.image} />
             <AvatarFallback>
               {(user?.firstName?.charAt(0) ?? '') +
                 (user?.lastName?.charAt(0) ?? '')}
